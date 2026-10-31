@@ -147,3 +147,13 @@ test('fuel tracking captures litres, odometer and full-tank boundary', async () 
   assert.match(html,/L\/100 km/);
   assert.match(html,/Fuel cost \/ km/);
 });
+
+
+test('fuel trend alerts require four intervals and flag material deterioration', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/function fuelEfficiencyAlert\(v\)/);
+  assert.match(html,/intervals\.length<4/);
+  assert.match(html,/change>=15/);
+  assert.match(html,/Fuel use is more than 15% above recent average/);
+  assert.match(html,/Fuel trend alert/);
+});

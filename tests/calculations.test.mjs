@@ -201,3 +201,17 @@ test('weigh station finder supports driver status reports with freshness limits'
   assert.match(html, /PW-0123/);
   assert.match(html, /function weighDirections/);
 });
+
+
+test('national NMI public weighbridge locations are included across every state and territory', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  for (const state of ['ACT','NSW','NT','QLD','SA','TAS','VIC','WA']) assert.match(html, new RegExp("state:'"+state+"'"));
+  assert.match(html, /PW-0330/);
+  assert.match(html, /PW-0226/);
+  assert.match(html, /PW-0502/);
+  assert.match(html, /PW-0372/);
+  assert.match(html, /PW-0186/);
+  assert.match(html, /PW-0050/);
+  assert.match(html, /PW-0395/);
+  assert.match(html, /NMI_NATIONAL_SITES/);
+});

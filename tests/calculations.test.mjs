@@ -99,3 +99,51 @@ test('all inline JavaScript in the app parses without syntax errors', async () =
   assert.ok(scripts.length > 0, 'expected inline app scripts');
   for (const script of scripts) new vm.Script(script[1]);
 });
+
+
+const measuredFuelIntervals = fills => {
+  const sorted = fills.filter(x => x.fullTank && num(x.odo) > 0 && num(x.litres) > 0)
+    .sort((a,b) => num(a.odo)-num(b.odo));
+  const intervals = [];
+  for (let i=1;i<sorted.length;i++) {
+    const from=sorted[i-1],to=sorted[i],km=num(to.odo)-num(from.odo);
+    if(km<=0) continue;
+    const included=fills.filter(x=>num(x.odo)>num(from.odo)&&num(x.odo)<=num(to.odo));
+    const litres=included.reduce((a,x)=>a+num(x.litres),0);
+    const cost=included.reduce((a,x)=>a+num(x.amount),0);
+    if(litres>0) intervals.push({km,litres,cost,lPer100:litres/km*100,costPerKm:cost/km});
+  }
+  return intervals;
+};
+
+test('full-tank fuel intervals include partial fills between full fills', () => {
+  const fills=[
+    {odo:100000,litres:400,amount:800,fullTank:true},
+    {odo:100500,litres:200,amount:420,fullTank:false},
+    {odo:101000,litres:400,amount:840,fullTank:true}
+  ];
+  const [i]=measuredFuelIntervals(fills);
+  assert.equal(i.km,1000);
+  assert.equal(i.litres,600);
+  assert.equal(i.cost,1260);
+  assert.equal(i.lPer100,60);
+  assert.equal(i.costPerKm,1.26);
+});
+
+test('fuel interval calculation ignores incomplete or invalid intervals', () => {
+  assert.equal(measuredFuelIntervals([
+    {odo:1000,litres:100,amount:200,fullTank:true},
+    {odo:1000,litres:80,amount:160,fullTank:true},
+    {odo:1200,litres:0,amount:0,fullTank:true}
+  ]).length,0);
+});
+
+test('fuel tracking captures litres, odometer and full-tank boundary', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/id="ffull"/);
+  assert.match(html,/pricePerLitre/);
+  assert.match(html,/function fuelIntervalStats\(v\)/);
+  assert.match(html,/function saveFuel\(\)/);
+  assert.match(html,/L\/100 km/);
+  assert.match(html,/Fuel cost \/ km/);
+});

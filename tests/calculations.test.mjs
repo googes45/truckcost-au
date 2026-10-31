@@ -89,7 +89,7 @@ test('trip recorder supports truck selection and pauses safely when app backgrou
   assert.match(html, /id="tripVehicle"/);
   assert.match(html, /document\.addEventListener\('visibilitychange'/);
   assert.match(html, /Paused — app moved to background/);
-  assert.match(sw, /truckcost-au-shell-v6/);
+  assert.match(sw, /truckcost-au-shell-v7/);
 });
 
 

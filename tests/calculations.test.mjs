@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
+import vm from 'node:vm';
 
 const num = n => { const v = Number(n); return Number.isFinite(v) ? v : 0; };
 const jobFuel = j => num(j.distance) / Math.max(.1, num(j.fuel)) * num(j.fuelPrice);
@@ -89,4 +90,12 @@ test('trip recorder supports truck selection and pauses safely when app backgrou
   assert.match(html, /document\.addEventListener\('visibilitychange'/);
   assert.match(html, /Paused — app moved to background/);
   assert.match(sw, /truckcost-au-shell-v4/);
+});
+
+
+test('all inline JavaScript in the app parses without syntax errors', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const scripts = [...html.matchAll(/<script>([\\s\\S]*?)<\\/script>/g)];
+  assert.ok(scripts.length > 0, 'expected inline app scripts');
+  for (const script of scripts) new vm.Script(script[1]);
 });

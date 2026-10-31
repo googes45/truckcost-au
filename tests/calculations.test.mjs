@@ -41,3 +41,12 @@ test('service worker cache shell includes the manifest and both icons', async ()
   assert.match(sw, /icons\/icon-192\.png/);
   assert.match(sw, /icons\/icon-512\.png/);
 });
+
+test('financial reporting UI includes date ranges, period shortcuts and CSV export', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /setReportPeriod\('quarter'\)/);
+  assert.match(html, /function reportData\(\)/);
+  assert.match(html, /function exportReportCsv\(\)/);
+  assert.match(html, /Estimated job profit/);
+  assert.match(html, /Recorded expenses/);
+});

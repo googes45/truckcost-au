@@ -50,3 +50,19 @@ test('financial reporting UI includes date ranges, period shortcuts and CSV expo
   assert.match(html, /Estimated job profit/);
   assert.match(html, /Recorded expenses/);
 });
+
+
+test('GPS trip recorder and manual work diary are present with clear beta limitations', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /function startTrip\(\)/);
+  assert.match(html, /function resumeTrip\(\)/);
+  assert.match(html, /function stopTrip\(\)/);
+  assert.match(html, /function haversineKm\(a,b\)/);
+  assert.match(html, /function diaryModal\(\)/);
+  assert.match(html, /function saveDiaryEntry\(\)/);
+  assert.match(html, /function exportDiaryCsv\(\)/);
+  assert.match(html, /not NHVR-approved/);
+  assert.match(html, /navigator\.geolocation\.watchPosition/);
+  assert.match(html, /trips:Array\.isArray\(s\.trips\)/);
+  assert.match(html, /diaryEntries:Array\.isArray\(s\.diaryEntries\)/);
+});

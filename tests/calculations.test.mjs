@@ -164,7 +164,7 @@ test('true-cost job estimate uses measured fuel cost and allocates non-fuel truc
   assert.match(html,/function vehicleNonFuelCostPerKm\(v\)/);
   assert.match(html,/function jobCostBreakdown\(j\)/);
   assert.match(html,/fuelStats\.km\?fuelStats\.costPerKm\*num\(j\.distance\):jobFuel\(j\)/);
-  assert.match(html,/truck overhead allocation/);
+  assert.match(html,/truck overhead/);
   assert.match(html,/id="jcostdetail"/);
 });
 

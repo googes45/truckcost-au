@@ -237,3 +237,14 @@ test('Australian truckie terminology appears in primary navigation and greetings
   assert.match(html,/>My Trucks</);
   assert.match(html,/>More Stuff</);
 });
+
+
+test('Australian truck terminology uses local tyre and rego wording', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/Axle \/ tyre position/);
+  assert.match(html,/Fitted date/);
+  assert.match(html,/Rego \/ year/);
+  assert.match(html,/Fuel use \(km\/L\)/);
+  assert.match(html,/Truck \/ rig name/);
+  assert.match(await readFile(new URL('../sw.js',import.meta.url),'utf8'),/truckcost-au-shell-v10/);
+});

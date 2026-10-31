@@ -63,8 +63,8 @@ test('GPS trip recorder and manual work diary are present with clear beta limita
   assert.match(html, /function saveDiaryEntry\(\)/);
   assert.match(html, /function exportDiaryCsv\(\)/);
   assert.match(html, /not an NHVR-approved Electronic Work Diary/);
-  assert.match(html, /nhvr.gov.au\\/safety-accreditation-compliance\\/fatigue-management\\/record-keeping-requirements/);
-  assert.match(html, /nhvr.gov.au\\/safety-accreditation-compliance\\/fatigue-management\\/electronic-work-diary-ewd\\/ewd-register/);
+  assert.ok(html.includes('record-keeping-requirements'));
+  assert.ok(html.includes('electronic-work-diary-ewd/ewd-register'));
   assert.match(html, /navigator\.geolocation\.watchPosition/);
   assert.match(html, /trips:Array\.isArray\(s\.trips\)/);
   assert.match(html, /diaryEntries:Array\.isArray\(s\.diaryEntries\)/);

@@ -89,7 +89,7 @@ test('trip recorder supports truck selection and pauses safely when app backgrou
   assert.match(html, /id="tripVehicle"/);
   assert.match(html, /document\.addEventListener\('visibilitychange'/);
   assert.match(html, /Paused — app moved to background/);
-  assert.match(sw, /truckcost-au-shell-v5/);
+  assert.match(sw, /truckcost-au-shell-v6/);
 });
 
 
@@ -186,4 +186,15 @@ test('tyre lifecycle tracks fitted distance, cost per km and removal odometer', 
   assert.match(html,/function retireTyre\(tid\)/);
   assert.match(html,/Tyre lifecycle/);
   assert.match(html,/Record tyre installation/);
+});
+
+
+test('weigh station finder supports driver status reports with freshness limits', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /NHVR weigh stations & weighbridges/);
+  assert.match(html, /function saveWeighReport\(siteId\)/);
+  assert.match(html, /function latestWeighReport\(siteId\)/);
+  assert.match(html, /3\*60\*60\*1000/);
+  assert.match(html, /weighReports:Array\.isArray\(s\.weighReports\)/);
+  assert.match(html, /All licensed public weighbridges/);
 });

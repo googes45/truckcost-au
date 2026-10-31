@@ -78,3 +78,13 @@ test('maintenance watch and GPS trip-to-job workflow are present', async () => {
   assert.match(html, /not continuous fleet telematics/);
   assert.match(html, /trips:\[\],diaryEntries:\[\],activeTrip:null/);
 });
+
+
+test('trip recorder supports truck selection and pauses safely when app backgrounds', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  const sw = await readFile(new URL('../sw.js', import.meta.url), 'utf8');
+  assert.match(html, /id="tripVehicle"/);
+  assert.match(html, /document\.addEventListener\('visibilitychange'/);
+  assert.match(html, /Paused — app moved to background/);
+  assert.match(sw, /truckcost-au-shell-v4/);
+});

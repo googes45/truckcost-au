@@ -66,3 +66,15 @@ test('GPS trip recorder and manual work diary are present with clear beta limita
   assert.match(html, /trips:Array\.isArray\(s\.trips\)/);
   assert.match(html, /diaryEntries:Array\.isArray\(s\.diaryEntries\)/);
 });
+
+
+test('maintenance watch and GPS trip-to-job workflow are present', async () => {
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /function maintenanceAlertsHtml\(\)/);
+  assert.match(html, /function exportTripsCsv\(\)/);
+  assert.match(html, /function jobFromTrip\(tripId\)/);
+  assert.match(html, /Use distance in job/);
+  assert.match(html, /GPS accuracy poor/);
+  assert.match(html, /not continuous fleet telematics/);
+  assert.match(html, /trips:\[\],diaryEntries:\[\],activeTrip:null/);
+});

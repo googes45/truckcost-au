@@ -176,3 +176,14 @@ test('minimum charge calculator prices in a requested margin without division by
   const revenueFor20Percent=1000/(1-.2);
   assert.equal(revenueFor20Percent,1250);
 });
+
+
+test('tyre lifecycle tracks fitted distance, cost per km and removal odometer', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/function tyreDistance\(t\)/);
+  assert.match(html,/function tyreCostPerKm\(t\)/);
+  assert.match(html,/function tyreModal\(\)/);
+  assert.match(html,/function retireTyre\(tid\)/);
+  assert.match(html,/Tyre lifecycle/);
+  assert.match(html,/Record tyre installation/);
+});

@@ -196,5 +196,5 @@ test('weigh station finder supports driver status reports with freshness limits'
   assert.match(html, /function latestWeighReport\(siteId\)/);
   assert.match(html, /3\*60\*60\*1000/);
   assert.match(html, /weighReports:Array\.isArray\(s\.weighReports\)/);
-  assert.match(html, /All licensed public weighbridges/);
+  assert.match(html, /All licensed public weighbridges/);\n  assert.match(html, /PW-0508/);\n  assert.match(html, /PW-0123/);\n  assert.match(html, /function weighDirections/);
 });

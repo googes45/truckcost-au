@@ -215,3 +215,25 @@ test('national NMI public weighbridge locations are included across every state 
   assert.match(html, /PW-0395/);
   assert.match(html, /NMI_NATIONAL_SITES/);
 });
+
+
+test('truckie joke board stores, renders safely, reacts and removes posts', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/jokes:Array\.isArray\(s\.jokes\)\?s\.jokes:\[\]/);
+  assert.match(html,/function postJoke\(\)/);
+  assert.match(html,/function renderJokes\(\)/);
+  assert.match(html,/function laughAtJoke\(id\)/);
+  assert.match(html,/function deleteJoke\(id\)/);
+  assert.match(html,/Truckie joke stop/);
+  assert.match(html,/LOCAL ONLY: jokes and laughs are saved on this device/);
+  assert.match(html,/maxlength="240"/);
+  assert.match(html,/esc\(j\.body\|\|''\)/);
+});
+
+test('Australian truckie terminology appears in primary navigation and greetings', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/G'day, truckie\./);
+  assert.match(html,/>Running Costs</);
+  assert.match(html,/>My Trucks</);
+  assert.match(html,/>More Stuff</);
+});

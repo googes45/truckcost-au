@@ -157,3 +157,22 @@ test('fuel trend alerts require four intervals and flag material deterioration',
   assert.match(html,/Fuel use is more than 15% above recent average/);
   assert.match(html,/Fuel trend alert/);
 });
+
+
+test('true-cost job estimate uses measured fuel cost and allocates non-fuel truck costs', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/function vehicleNonFuelCostPerKm\(v\)/);
+  assert.match(html,/function jobCostBreakdown\(j\)/);
+  assert.match(html,/fuelStats\.km\?fuelStats\.costPerKm\*num\(j\.distance\):jobFuel\(j\)/);
+  assert.match(html,/truck overhead allocation/);
+  assert.match(html,/id="jcostdetail"/);
+});
+
+test('minimum charge calculator prices in a requested margin without division by zero', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/function minimumJobRevenue\(cost,marginPercent\)/);
+  assert.match(html,/id="jmargin"/);
+  assert.match(html,/Minimum revenue for target margin/);
+  const revenueFor20Percent=1000/(1-.2);
+  assert.equal(revenueFor20Percent,1250);
+});

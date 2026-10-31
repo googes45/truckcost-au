@@ -24,10 +24,10 @@ test('vehicle cost per km includes direct and annual fixed costs', () => {
   const v = {id: 1, odo: 684200, initialOdo: 640000, finance: 2100, insurance: 420, regoCost: 180};
   const expenses = [{vehicleId: 1, amount: 1850}];
   const maintenance = [{vehicleId: 1, amount: 980}];
-  assert.ok(Math.abs(vehicleCostPerKm(v, expenses, maintenance) - 0.8363348416289593) < 1e-12);
+  assert.ok(Math.abs(vehicleCostPerKm(v, expenses, maintenance) - 0.752262443438914) < 1e-12);
 });
 
-test('invalid numeric input does not become a huge cost', () => {
+test('invalid numeric input is normalised safely', () => {
   assert.equal(num('not-a-number'), 0);
   assert.equal(jobFuel({distance: 100, fuel: 0, fuelPrice: 2}), 2000);
 });

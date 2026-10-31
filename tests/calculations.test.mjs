@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 
 const num = n => { const v = Number(n); return Number.isFinite(v) ? v : 0; };
 const jobFuel = j => num(j.distance) / Math.max(.1, num(j.fuel)) * num(j.fuelPrice);
@@ -13,21 +14,30 @@ const vehicleCostPerKm = (v, expenses, maintenance) => {
 };
 
 test('job fuel cost is distance divided by km/L times fuel price', () => {
-  assert.equal(jobFuel({distance: 1420, fuel: 2.4, fuelPrice: 2.15}), 1271.4583333333333);
+  assert.ok(Math.abs(jobFuel({distance:1420,fuel:2.4,fuelPrice:2.15}) - 1272.0833333333335) < 1e-9);
 });
-
 test('job profit includes fuel, tolls, driver and other costs', () => {
-  assert.equal(jobProfit({revenue: 4800, distance: 1420, fuel: 2.4, fuelPrice: 2.15, tolls: 145, driver: 620, other: 0}), 2763.5416666666665);
+  assert.ok(Math.abs(jobProfit({revenue:4800,distance:1420,fuel:2.4,fuelPrice:2.15,tolls:145,driver:620,other:0}) - 2762.9166666666665) < 1e-9);
 });
-
 test('vehicle cost per km includes direct and annual fixed costs', () => {
-  const v = {id: 1, odo: 684200, initialOdo: 640000, finance: 2100, insurance: 420, regoCost: 180};
-  const expenses = [{vehicleId: 1, amount: 1850}];
-  const maintenance = [{vehicleId: 1, amount: 980}];
-  assert.ok(Math.abs(vehicleCostPerKm(v, expenses, maintenance) - 0.752262443438914) < 1e-12);
+  const v={id:1,odo:684200,initialOdo:640000,finance:2100,insurance:420,regoCost:180};
+  const expenses=[{vehicleId:1,amount:1850}], maintenance=[{vehicleId:1,amount:980}];
+  assert.ok(Math.abs(vehicleCostPerKm(v,expenses,maintenance)-0.752262443438914) < 1e-12);
 });
-
 test('invalid numeric input is normalised safely', () => {
-  assert.equal(num('not-a-number'), 0);
-  assert.equal(jobFuel({distance: 100, fuel: 0, fuelPrice: 2}), 2000);
+  assert.equal(num('not-a-number'),0);
+  assert.equal(jobFuel({distance:100,fuel:0,fuelPrice:2}),2000);
+});
+test('manifest icon paths resolve to committed files', async () => {
+  const manifest = JSON.parse(await readFile(new URL('../manifest.webmanifest', import.meta.url), 'utf8'));
+  for (const icon of manifest.icons) {
+    assert.equal(icon.src.startsWith('icons/'), true);
+    await readFile(new URL('../' + icon.src, import.meta.url));
+  }
+});
+test('service worker cache shell includes the manifest and both icons', async () => {
+  const sw = await readFile(new URL('../sw.js', import.meta.url), 'utf8');
+  assert.match(sw, /manifest\.webmanifest/);
+  assert.match(sw, /icons\/icon-192\.png/);
+  assert.match(sw, /icons\/icon-512\.png/);
 });

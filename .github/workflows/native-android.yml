@@ -16,6 +16,10 @@ on:
       - 'terms.html'
       - 'delete-account.html'
 
+concurrency:
+  group: truckingcostr-native-android-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:

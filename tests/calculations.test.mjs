@@ -89,7 +89,7 @@ test('trip recorder supports truck selection and pauses safely when app backgrou
   assert.match(html, /id="tripVehicle"/);
   assert.match(html, /document\.addEventListener\('visibilitychange'/);
   assert.match(html, /Paused — app moved to background/);
-  assert.match(sw, /truckcost-au-shell-v11/);
+  assert.match(sw, /truckcost-au-shell-v12/);
 });
 
 
@@ -246,7 +246,7 @@ test('Australian truck terminology uses local tyre and rego wording', async () =
   assert.match(html,/Rego \/ year/);
   assert.match(html,/Fuel use \(km\/L\)/);
   assert.match(html,/Truck \/ rig name/);
-  assert.match(await readFile(new URL('../sw.js',import.meta.url),'utf8'),/truckcost-au-shell-v11/);
+  assert.match(await readFile(new URL('../sw.js',import.meta.url),'utf8'),/truckcost-au-shell-v12/);
 });
 
 
@@ -256,4 +256,17 @@ test('Joke Stop has its own navigation tab and dedicated page', async () => {
  assert.match(html,/jokes:jokesPage/);
  assert.match(html,/function jokesPage\(c\)/);
  assert.match(html,/grid-template-columns:repeat\(6,1fr\)/);
+});
+
+test('privacy and terms documents are present and linked from the app', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  const privacy=await readFile(new URL('../privacy.html',import.meta.url),'utf8');
+  const terms=await readFile(new URL('../terms.html',import.meta.url),'utf8');
+  assert.match(html,/href="privacy\\.html"/);
+  assert.match(html,/href="terms\\.html"/);
+  assert.match(privacy,/local storage/i);
+  assert.match(privacy,/GPS|location/i);
+  assert.match(privacy,/not shared|not transmitted|not uploaded/i);
+  assert.match(terms,/not an NHVR-approved/i);
+  assert.match(terms,/beta/i);
 });

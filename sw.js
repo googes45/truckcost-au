@@ -1,4 +1,4 @@
-const CACHE_NAME = 'truckcost-au-shell-v13';
+const CACHE_NAME = 'truckingcostr-au-shell-v14';
 const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './privacy.html', './terms.html', './icons/icon-192.png', './icons/icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));

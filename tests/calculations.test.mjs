@@ -89,7 +89,7 @@ test('trip recorder supports truck selection and pauses safely when app backgrou
   assert.match(html, /id="tripVehicle"/);
   assert.match(html, /document\.addEventListener\('visibilitychange'/);
   assert.match(html, /Paused — app moved to background/);
-  assert.match(sw, /truckcost-au-shell-v12/);
+  assert.match(sw, /truckcost-au-shell-v13/);
 });
 
 
@@ -246,7 +246,7 @@ test('Australian truck terminology uses local tyre and rego wording', async () =
   assert.match(html,/Rego \/ year/);
   assert.match(html,/Fuel use \(km\/L\)/);
   assert.match(html,/Truck \/ rig name/);
-  assert.match(await readFile(new URL('../sw.js',import.meta.url),'utf8'),/truckcost-au-shell-v12/);
+  assert.match(await readFile(new URL('../sw.js',import.meta.url),'utf8'),/truckcost-au-shell-v13/);
 });
 
 

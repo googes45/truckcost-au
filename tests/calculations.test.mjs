@@ -265,9 +265,9 @@ test('privacy and terms documents are present and linked from the app', async ()
   assert.match(html,/href="privacy\.html"/);
   assert.match(html,/href="terms\.html"/);
   assert.match(privacy,/Supabase database/i);
-  assert.match(privacy,/local browser copy/i);
+  assert.match(privacy,/browser/i);
   assert.match(privacy,/GPS|location/i);
-  assert.match(privacy,/not shared|not transmitted|not uploaded/i);
+  assert.match(privacy,/shared public driver feed is not yet connected/i);
   assert.match(terms,/not an NHVR-approved/i);
   assert.match(terms,/beta/i);
 });

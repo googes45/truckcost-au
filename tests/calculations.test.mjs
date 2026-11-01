@@ -246,7 +246,7 @@ test('Australian truck terminology uses local tyre and rego wording', async () =
   assert.match(html,/Rego \/ year/);
   assert.match(html,/Fuel use \(km\/L\)/);
   assert.match(html,/Truck \/ rig name/);
-  assert.match(await readFile(new URL('../sw.js',import.meta.url),'utf8'),/truckcost-au-shell-v10/);
+  assert.match(await readFile(new URL('../sw.js',import.meta.url),'utf8'),/truckcost-au-shell-v11/);
 });
 
 

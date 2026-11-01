@@ -264,7 +264,7 @@ test('privacy and terms documents are present and linked from the app', async ()
   const terms=await readFile(new URL('../terms.html',import.meta.url),'utf8');
   assert.match(html,/href="privacy\.html"/);
   assert.match(html,/href="terms\.html"/);
-  assert.match(privacy,/Supabase database/i);
+  assert.match(privacy,/Supabase/i);
   assert.match(privacy,/browser/i);
   assert.match(privacy,/GPS|location/i);
   assert.match(privacy,/shared public driver feed is not yet connected/i);

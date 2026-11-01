@@ -32,7 +32,7 @@ On Android Chrome, use **Install app** / **Add to Home screen** if offered.
 Read the [Privacy Policy](privacy.html) and [Terms of Use](terms.html).
 
 ## QA
-Automated regression and full inline JavaScript syntax checks run in GitHub Actions:
+Automated regression, inline JavaScript syntax and web-asset packaging checks run in GitHub Actions:
 https://github.com/googes45/truckcost-au/actions
 
 Automated tests do not replace hands-on Android/iOS browser testing, accessibility review, security review or independent calculation validation.

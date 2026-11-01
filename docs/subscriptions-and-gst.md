@@ -1,6 +1,6 @@
 # TruckingCostr AU — subscriptions and GST launch setup
 
-Status: preparation only. No payment processor is connected and no customer can currently subscribe or be charged.
+Status: payment preparation only. No payment processor or Apple/Google purchase verification is connected and no customer can currently subscribe or be charged. A private server-side subscription schema and authenticated entitlement-read endpoint have now been deployed; these are infrastructure components, not a working checkout.
 
 ## Business tax position supplied by owner
 

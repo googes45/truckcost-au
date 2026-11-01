@@ -12,8 +12,8 @@ Published PWA: https://googes45.github.io/truckcost-au/
 - Local JSON backup/restore and CSV export functions.
 - Truck, job, fuel, cost, tyre, maintenance, trip, manual diary, weigh-location and jokes workflows.
 - Private ATO/BAS due-date reminders; no ATO connection, verified BAS preparation or lodgement.
-- Public Privacy Policy and Terms of Use.
-- Automated calculation regression tests in GitHub Actions.
+- Public Privacy Policy and Terms of Use, with in-app self-service account and cloud-data deletion backed by an authenticated server function.
+- Automated calculation regression tests, inline JavaScript syntax checks and web-asset packaging checks in GitHub Actions.
 - Capacitor 8 packaging configuration, web-asset build script, and CI workflows intended to generate Android debug and iOS simulator builds.
 
 ## Latest automated deployment check

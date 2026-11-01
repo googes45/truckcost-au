@@ -270,3 +270,13 @@ test('privacy and terms documents are present and linked from the app', async ()
   assert.match(terms,/not an NHVR-approved/i);
   assert.match(terms,/beta/i);
 });
+
+test('cloud authentication client script parses and uses per-user RLS workspace storage', async () => {
+  const cloud = await readFile(new URL('../cloud-auth.js', import.meta.url), 'utf8');
+  new vm.Script(cloud, { filename: 'cloud-auth.js' });
+  assert.match(cloud, /signInWithPassword/);
+  assert.match(cloud, /auth\.signUp/);
+  assert.match(cloud, /from\('user_workspaces'\)\.upsert/);
+  assert.match(cloud, /from\('user_workspaces'\)\.select/);
+  assert.match(cloud, /confirm\('This account has no cloud data yet/);
+});

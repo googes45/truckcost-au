@@ -1,0 +1,14 @@
+{
+  "appId": "au.com.truckingcostr.app",
+  "appName": "TruckingCostr AU",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "ios": {
+    "contentInset": "automatic"
+  },
+  "android": {
+    "allowMixedContent": false
+  }
+}

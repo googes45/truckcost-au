@@ -97,7 +97,7 @@ test('all inline JavaScript in the app parses without syntax errors', async () =
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const scripts = html.split('<script>').slice(1).map(part => part.split('</script>')[0]);
   assert.ok(scripts.length > 0, 'expected inline app scripts');
-  for (const script of scripts) new vm.Script(script[1]);
+  for (const script of scripts) new vm.Script(script);
 });
 
 

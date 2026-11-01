@@ -4,7 +4,7 @@
   const KEY = 'sb_publishable_7Bf7EPeN_AsCz1ZQbPcc3w_WeHDUDgK';
   if (!window.supabase || typeof window.supabase.createClient !== 'function') return;
   const client = window.supabase.createClient(URL, KEY, { auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: true } });
-  let session = null, timer = null, syncing = false, pending = false, lifetimeFree = false;
+  let session = null, timer = null, syncing = false, pending = false, lifetimeFree = false, recoveringPassword = false;
   const login = document.getElementById('login');
   const app = document.getElementById('app');
   const originalSave = window.save;
@@ -46,6 +46,7 @@
       try {
         const { error } = await client.auth.updateUser({ password: nextPassword });
         if (error) throw error;
+        recoveringPassword = false;
         const { data, error: sessionError } = await client.auth.getSession();
         if (sessionError) throw sessionError;
         if (data.session) await loadWorkspace(data.session);
@@ -80,8 +81,8 @@
   };
   client.auth.onAuthStateChange((event) => {
     if (event === 'SIGNED_OUT') { session = null; lifetimeFree = false; state = emptyState(); originalSave(); showLogin(); }
-    if (event === 'PASSWORD_RECOVERY') showPasswordRecovery();
+    if (event === 'PASSWORD_RECOVERY') { recoveringPassword = true; showPasswordRecovery(); }
   });
   showLogin();
-  client.auth.getSession().then(({ data, error }) => { if (error) return message(error.message); if (data.session) loadWorkspace(data.session); });
+  client.auth.getSession().then(({ data, error }) => { if (error) return message(error.message); if (recoveringPassword) return showPasswordRecovery(); if (data.session) loadWorkspace(data.session); });
 })();

@@ -14,7 +14,7 @@ Published PWA: https://googes45.github.io/truckcost-au/
 - Private ATO/BAS due-date reminders; no ATO connection, verified BAS preparation or lodgement.
 - Public Privacy Policy and Terms of Use, with in-app self-service account and cloud-data deletion backed by an authenticated server function.
 - Automated calculation regression tests, inline JavaScript syntax checks and web-asset packaging checks in GitHub Actions.
-- Capacitor 8 packaging configuration, web-asset build script, and CI workflows intended to generate Android debug and iOS simulator builds.
+- Capacitor 8 packaging configuration, native GPS bridge and custom-scheme authentication callback code; CI workflows intended to generate Android debug and iOS simulator builds. Physical-device validation remains outstanding.
 
 ## Latest automated deployment check
 For commit `9cfc9ef685e6237fa7b79d5c1bc2a44a2d935887`:
@@ -31,7 +31,7 @@ For commit `9cfc9ef685e6237fa7b79d5c1bc2a44a2d935887`:
 
 ## Not delivered — do not advertise as live
 - Subscription purchases, payment processing, webhooks or paid-feature entitlement enforcement.
-- Native Supabase confirmation deep-link/callback flow; current redirect is not configured for native app origins.
+- Supabase Auth Redirect URLs allow-list entry for `truckingcostrau://auth/callback` and end-to-end native confirmation-link testing.
 - Signed native iOS or Android store-release builds, store builds or store approval. Capacitor scaffold and unsigned CI engineering builds are not store releases.
 - Fleet/tenant roles, multi-user invitations and shared fleet workspaces.
 - Shared public joke board, shared weighbridge reports or moderation tools.

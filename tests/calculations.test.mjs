@@ -284,6 +284,7 @@ test('cloud authentication client script parses and uses per-user RLS workspace 
   assert.match(cloud, /from\('user_workspaces'\)\.select/);
   assert.match(cloud, /from\('lifetime_access_grants'\)\.select/);
   assert.match(cloud, /LIFETIME FREE ACCESS/);
+  assert.match(cloud, /exact email address the owner invited/);
   const accessSql = await readFile(new URL('../admin/lifetime-access.sql', import.meta.url), 'utf8');
   assert.match(accessSql, /insert into public\.lifetime_access_grants/i);
   assert.match(accessSql, /revoked_at = now\(\)/);

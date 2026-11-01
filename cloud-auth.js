@@ -17,6 +17,24 @@
   async function loadWorkspace(nextSession) { session = nextSession; status('● LOADING CLOUD'); try { const { data, error } = await client.from('user_workspaces').select('workspace').eq('user_id', session.user.id).maybeSingle(); if (error) throw error; if (data && data.workspace && Object.keys(data.workspace).length) { state = normalise(data.workspace); state.user = { email: session.user.email || '', id: session.user.id }; originalSave(); } else { if (hasLocalData() && confirm('This account has no cloud data yet. Upload the records currently saved on this device? Choose Cancel to start with an empty cloud workspace.')) { state.user = { email: session.user.email || '', id: session.user.id }; } else { state = emptyState(); state.user = { email: session.user.email || '', id: session.user.id }; } await sync(); } const { data: grant, error: grantError } = await client.from('lifetime_access_grants').select('grant_type,reason,granted_at').eq('user_id', session.user.id).maybeSingle(); if (grantError) throw grantError; lifetimeFree = !!grant && grant.grant_type === 'lifetime_free'; window.showApp(); status(lifetimeFree ? '★ LIFETIME FREE ACCESS' : '● CLOUD SYNCED'); } catch (e) { session = null; status('● CLOUD ERROR'); showLogin(); message('Could not load your cloud workspace: ' + (e.message || 'Try again.')); } }
   window.save = function () { originalSave(); if (session) { clearTimeout(timer); timer = setTimeout(sync, 900); } };
   window.signOut = async function () { const { error } = await client.auth.signOut(); if (error) message(error.message); };
+  window.deleteAccount = async function () {
+    if (!session) return message('Sign in before requesting account deletion.');
+    if (!confirm('Permanently delete your TruckingCostr AU account and its cloud workspace? This cannot be undone. Export a backup first if you want to keep your records.')) return;
+    message('Deleting your account and cloud data…');
+    try {
+      const { error } = await client.functions.invoke('delete-account', { method: 'POST' });
+      if (error) throw error;
+      session = null;
+      lifetimeFree = false;
+      try { await client.auth.signOut({ scope: 'local' }); } catch (_) {}
+      localStorage.removeItem('truckcost_au_v1');
+      state = emptyState();
+      showLogin();
+      message('Your account and cloud workspace have been deleted.');
+    } catch (e) {
+      message(e.message || 'Account deletion failed. Please try again or contact support.');
+    }
+  };
   client.auth.onAuthStateChange((event) => { if (event === 'SIGNED_OUT') { session = null; lifetimeFree = false; state = emptyState(); originalSave(); showLogin(); } });
   showLogin();
   client.auth.getSession().then(({ data, error }) => { if (error) return message(error.message); if (data.session) loadWorkspace(data.session); });

@@ -89,7 +89,7 @@ test('trip recorder supports truck selection and pauses safely when app backgrou
   assert.match(html, /id="tripVehicle"/);
   assert.match(html, /document\.addEventListener\('visibilitychange'/);
   assert.match(html, /Paused — app moved to background/);
-  assert.match(sw, /truckcost-au-shell-v10/);
+  assert.match(sw, /truckcost-au-shell-v11/);
 });
 
 
@@ -247,4 +247,13 @@ test('Australian truck terminology uses local tyre and rego wording', async () =
   assert.match(html,/Fuel use \(km\/L\)/);
   assert.match(html,/Truck \/ rig name/);
   assert.match(await readFile(new URL('../sw.js',import.meta.url),'utf8'),/truckcost-au-shell-v10/);
+});
+
+
+test('Joke Stop has its own navigation tab and dedicated page', async () => {
+ const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+ assert.match(html,/data-tab="jokes" onclick="go\('jokes'\)"/);
+ assert.match(html,/jokes:jokesPage/);
+ assert.match(html,/function jokesPage\(c\)/);
+ assert.match(html,/grid-template-columns:repeat\(6,1fr\)/);
 });

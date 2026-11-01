@@ -5,7 +5,7 @@ Updated: 1 November 2026
 ## Current state
 
 - The published product is a static Progressive Web App hosted on GitHub Pages.
-- A Capacitor 8 native packaging scaffold is now in the repository (`capacitor.config.json`, `scripts/build-web.mjs`, and Android/iOS GitHub Actions build workflows). The workflows generate native projects in CI; generated projects are not committed or yet validated on physical devices.
+- A Capacitor 8 native packaging scaffold is now in the repository, including `@capacitor/geolocation`, `@capacitor/app`, native GPS bridging, custom-scheme auth callback handling and Android/iOS GitHub Actions build workflows. The workflows generate native projects in CI; generated projects are not committed or yet validated on physical devices.
 - The app displays proposed plan prices, but no customer can purchase a subscription, be charged, or receive paid-plan access.
 - Supabase email/password authentication and per-account workspace sync are present in the beta.
 - Lifetime complimentary grants can be attached to accounts and displayed, but they are **not yet connected to a server-enforced paid-feature access gate**.
@@ -33,7 +33,7 @@ The initial Capacitor packaging scaffold has been added. The next step is to run
 - separate development, sandbox/test and production configurations;
 - app identifiers, signing, versioning, icons, screenshots and store metadata.
 
-The current GitHub Actions workflows are intended to produce an Android debug APK and an unsigned iOS simulator app for engineering checks. These outputs are not store-release packages. Before committing to store distribution, prove that GPS trip recording, location permissions, background behaviour, authentication redirects, file backup/restore and service-worker assumptions work correctly inside both native shells. The app currently uses a Supabase confirmation redirect based on `location.origin`; the native callback/deep-link flow is not yet configured. A wrapper alone does not make the current PWA store-ready. Apple guideline 4.2 also requires meaningful app-specific utility beyond a repackaged website.
+The current GitHub Actions workflows are intended to produce an Android debug APK and an unsigned iOS simulator app for engineering checks. These outputs are not store-release packages. Native GPS is bridged through the Capacitor Geolocation plugin, and native email confirmation uses `truckingcostrau://auth/callback`. Add that exact URI to the Supabase Auth Redirect URLs allow-list before testing native account creation. Before store distribution, prove GPS, location permissions, authentication callbacks, file backup/restore and foreground/background behaviour on physical devices. Background tracking is not implemented. A wrapper alone does not make the current PWA store-ready. Apple guideline 4.2 also requires meaningful app-specific utility beyond a repackaged website.
 
 ### 2. Store purchase flow
 

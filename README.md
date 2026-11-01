@@ -1,6 +1,6 @@
-# TruckCost AU — public beta
+# TruckingCostr AU — public beta
 
-TruckCost AU is a mobile-first Australian truck operating-cost and job-record PWA. This release is a **public beta for evaluation**, not production SaaS or an approved compliance product.
+TruckingCostr AU is a mobile-first Australian truck operating-cost and job-record PWA. This release is a **public beta for evaluation**, not production SaaS or an approved compliance product.
 
 ## Open the beta
 https://googes45.github.io/truckcost-au/

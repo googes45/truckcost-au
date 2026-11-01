@@ -290,3 +290,22 @@ test('cloud authentication client script parses and uses per-user RLS workspace 
   assert.match(accessSql, /revoked_at = now\(\)/);
   assert.match(cloud, /confirm\('This account has no cloud data yet/);
 });
+
+test('ATO and BAS due-date reminders are private workspace data with no false lodgement claim', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  const auth=await readFile(new URL('../cloud-auth.js',import.meta.url),'utf8');
+  assert.match(html,/atoReminders:Array\\.isArray\\(s\\.atoReminders\\)/);
+  assert.match(html,/function saveAtoReminder\\(\\)/);
+  assert.match(html,/function renderAtoReminders\\(\\)/);
+  assert.match(html,/BAS lodgement/);
+  assert.match(html,/does not connect to ATO systems/);
+  assert.match(auth,/atoReminders/);
+});
+
+test('NHVR publisher commitment is one-way and excludes all driver and fleet information', async () => {
+  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
+  assert.match(html,/strictly one-way/);
+  assert.match(html,/no access to driver or fleet accounts/);
+  assert.match(html,/No return-data feed/);
+  assert.match(html,/not connected or endorsed by NHVR yet/);
+});

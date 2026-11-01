@@ -17,6 +17,7 @@ On Android Chrome, use **Install app** / **Add to Home screen** if offered.
 - National public weighbridge directory plus a separately labelled roadside inspection location starter list.
 - Account-private joke board and driver weighbridge status records (shared public feed is not live yet).
 - Private in-app ATO/BAS due-date reminders (user-entered dates only; no ATO data connection or lodgement in this beta).
+- Proposed subscriptions: Diary Truckie $5/month; Owner-Driver $14.99/month and Fleet Boss $39.99/month, both including diary access. Prices are AUD, proposed GST-inclusive where GST applies; billing and entitlement enforcement are not live.
 - NHVR official notice channel design documented in-app as strictly one-way publish-only; not activated pending formal NHVR arrangement.
 
 ## Important limitations

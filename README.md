@@ -29,7 +29,7 @@ On Android Chrome, use **Install app** / **Add to Home screen** if offered.
 - **Receipt handling:** details are manually entered; no OCR/accounting integration is connected. Selected images are not uploaded or retained as attachments.
 - **External links:** Google Maps, NHVR and NMI links are third-party services with their own terms and privacy practices.
 
-Read the [Privacy Policy](privacy.html) and [Terms of Use](terms.html).
+Read the [Privacy Policy](privacy.html), [Terms of Use](terms.html) and [account deletion instructions](delete-account.html).
 
 ## QA
 Automated regression, inline JavaScript syntax and web-asset packaging checks run in GitHub Actions:

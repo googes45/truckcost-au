@@ -54,3 +54,7 @@ Requires Node.js 22+.
 npm test
 ```
 The app is static and has no application build step.
+
+## Subscription backend preparation
+
+A private server-managed billing schema has been applied to Supabase and the authenticated `billing-entitlement` Edge Function is deployed. It verifies the caller's Supabase session and returns the server-calculated entitlement snapshot. Anonymous and authenticated browser roles cannot execute the underlying entitlement SQL function or access private billing tables. No Apple/Google purchase verification, store notifications, checkout, or paid-feature enforcement is connected yet; no customer can be charged. See [native billing implementation](docs/native-billing-implementation.md) and [subscriptions/GST setup](docs/subscriptions-and-gst.md).

@@ -1,5 +1,5 @@
 # TruckingCostr AU — publication readiness
-Updated: 1 November 2026
+Updated: 2 November 2026
 
 ## Release decision
 **The current website is a public beta, not a production SaaS release and not an approved compliance product. Paid launch is not ready.**
@@ -13,7 +13,8 @@ Published PWA: https://googes45.github.io/truckcost-au/
 - Truck, job, fuel, cost, tyre, maintenance, trip, manual diary, weigh-location and jokes workflows.
 - Private ATO/BAS due-date reminders; no ATO connection, verified BAS preparation or lodgement.
 - Public Privacy Policy and Terms of Use.
-- Automated calculation regression tests and inline JavaScript syntax checks in GitHub Actions.
+- Automated calculation regression tests in GitHub Actions.
+- Capacitor 8 packaging configuration, web-asset build script, and CI workflows intended to generate Android debug and iOS simulator builds.
 
 ## Latest automated deployment check
 For commit `9cfc9ef685e6237fa7b79d5c1bc2a44a2d935887`:
@@ -30,7 +31,8 @@ For commit `9cfc9ef685e6237fa7b79d5c1bc2a44a2d935887`:
 
 ## Not delivered — do not advertise as live
 - Subscription purchases, payment processing, webhooks or paid-feature entitlement enforcement.
-- Native iOS or Android app projects, store builds or store approval.
+- Native Supabase confirmation deep-link/callback flow; current redirect is not configured for native app origins.
+- Signed native iOS or Android store-release builds, store builds or store approval. Capacitor scaffold and unsigned CI engineering builds are not store releases.
 - Fleet/tenant roles, multi-user invitations and shared fleet workspaces.
 - Shared public joke board, shared weighbridge reports or moderation tools.
 - Approved EWD or legal fatigue calculation.

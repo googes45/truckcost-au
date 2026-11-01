@@ -41,7 +41,7 @@ jobs:
       - name: Sync native project
         run: npx cap sync android
       - name: Configure native permissions and deep links
-        run: node scripts/configure-native.mjs
+        run: node scripts/configure-native.mjs android
       - name: Build debug APK
         run: cd android && ./gradlew assembleDebug
       - name: Upload debug APK

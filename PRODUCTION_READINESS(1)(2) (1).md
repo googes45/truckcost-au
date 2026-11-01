@@ -1,43 +1,65 @@
-# TruckCost AU — publication readiness
+# TruckingCostr AU — publication readiness
 Updated: 1 November 2026
 
 ## Release decision
-**Suitable for a clearly labelled public beta only after current automated checks and hands-on smoke testing pass. Not approved for production SaaS or regulated/compliance use.**
+**The current website is a public beta, not a production SaaS release and not an approved compliance product. Paid launch is not ready.**
 
 Published PWA: https://googes45.github.io/truckcost-au/
 
-## Completed in repository
-- Mobile-first static PWA, manifest, icons and versioned service-worker cache.
-- Local-only status disclosed; no fake cloud account or sync claims.
-- JSON backup/restore, CSV exports and local data reset.
-- Job, fuel, cost, tyre, maintenance, trip, diary, weigh-location and joke workflows.
-- Explicit limitations for fatigue diary, GPS background operation, manual receipt entry and unshared driver reports.
-- Public Privacy Policy and Terms of Use linked in the app.
-- Automated regression tests and full inline JavaScript syntax parsing.
+## Verified repository capabilities
+- Mobile-first static PWA with manifest, icons and service-worker cache.
+- Supabase email/password authentication and per-account workspace sync are wired into the beta. This is not yet a claim of production-grade security or tenant isolation.
+- Local JSON backup/restore and CSV export functions.
+- Truck, job, fuel, cost, tyre, maintenance, trip, manual diary, weigh-location and jokes workflows.
+- Private ATO/BAS due-date reminders; no ATO connection, verified BAS preparation or lodgement.
+- Public Privacy Policy and Terms of Use.
+- Automated calculation regression tests and inline JavaScript syntax checks in GitHub Actions.
 
-## Required before announcing public beta
-1. Latest GitHub Actions tests pass.
-2. Latest Pages deployment succeeds and serves the latest commit.
-3. Android Chrome smoke test: launch, demo workspace, add/save records, backup export/restore, navigation, external links, install prompt and service-worker update.
-4. Desktop browser smoke test.
-5. Keyboard focus, labels, contrast, zoom and screen-reader basics.
-6. Confirm deployed privacy/terms match the deployed app.
+## Latest automated deployment check
+For commit `9cfc9ef685e6237fa7b79d5c1bc2a44a2d935887`:
+- GitHub Actions test run 41310277250: **success**.
+- GitHub Pages deployment run 41310276790: **success**.
+- These automated checks do not replace real-device testing or store review.
 
-## Not delivered — do not advertise as available
-- Real user accounts or secure authentication.
-- Cloud database, shared jokes, shared weighbridge reports or multi-device sync.
-- Subscription billing, paid plans or business/driver roles.
-- Server-side audit trail, tenant isolation or automated backups.
-- OCR, accounting integration or verified receipt extraction.
+## Required hands-on beta checks
+1. Android Chrome: sign-up, sign-in, sign-out, demo workspace, add/save/reload records, cloud sync, JSON export/import, navigation, links, install prompt and service-worker update.
+2. Desktop browser: authentication, workspace sync, data export/restore and responsive layout.
+3. Accessibility: keyboard focus, labels, contrast, zoom and screen-reader basics.
+4. Verify privacy and terms pages on the deployed site.
+5. Test account isolation with two separate test accounts; confirm one account cannot read or overwrite another account's workspace.
+
+## Not delivered — do not advertise as live
+- Subscription purchases, payment processing, webhooks or paid-feature entitlement enforcement.
+- Native iOS or Android app projects, store builds or store approval.
+- Fleet/tenant roles, multi-user invitations and shared fleet workspaces.
+- Shared public joke board, shared weighbridge reports or moderation tools.
 - Approved EWD or legal fatigue calculation.
-- Guaranteed complete/current national roadside inspection station directory.
+- ATO SBR connection, verified BAS preparation or direct BAS lodgement.
+- NHVR publishing portal, NHVR agreement or technically isolated NHVR publisher permissions.
+- Complete/current guaranteed roadside inspection station directory.
+- OCR or connected accounting integration.
+
+## Lifetime-free access status
+The Supabase invitation/grant table and email-matching attachment mechanism are prepared. The beta can display a lifetime-free grant, but that grant is not yet connected to a complete server-enforced paid-feature gate. Do not promise full paid-plan access until the trusted entitlement service described in `docs/native-billing-implementation.md` is implemented and tested.
 
 ## Production SaaS gates
-Before handling confidential customer/business data at scale: implement a maintained backend and authentication provider; enforce server-side authorisation and tenant isolation; validate input server-side; encrypt transport and sensitive data; implement secrets management, backups and restore drills, retention/deletion controls, audit logs, monitoring, incident response, moderation/abuse handling, security testing and privacy/legal review.
+Before handling confidential customer/business data at scale:
+- Independently verify every exposed table's RLS policies and cross-account isolation.
+- Implement server-side authorisation for every privileged action and validate inputs server-side.
+- Confirm encryption in transit and assess sensitive data at rest; the app itself does not encrypt browser/local workspace data.
+- Configure automated backups and successfully complete restore drills.
+- Implement retention/deletion controls, audit logs, monitoring, incident response and support procedures.
+- Complete independent security testing and privacy/legal review.
+- Test account recovery, session expiry, data export and deletion.
+- Validate all financial calculations independently; job estimates depend on user-entered figures and may not represent actual net profit.
 
-## Operating assumptions
-- Browser local storage is not encrypted by this app and can be lost when browser data is cleared.
-- Users must export and securely retain backups.
-- Job estimates depend on user-entered figures and may not represent actual net profit.
-- Jokes and weighbridge status reports remain on the current device only.
-- Third-party map, NHVR and NMI pages have their own terms and privacy policies.
+## Important operational limitations
+- Browser-local data can be lost if browser data is cleared; users should export and securely retain backups.
+- Exported JSON backups are plain files.
+- Manual driver diary is not an NHVR-approved EWD and does not calculate legal fatigue limits.
+- GPS may stop when backgrounded or locked, depending on device/browser.
+- Weighbridge and driver status information may be incomplete or stale; user reports are not an authoritative operating-status source.
+- NHVR official notices remain a planned one-way publish-only channel only; no partnership or live publisher access is claimed.
+- ATO/BAS reminders are user-entered and are not official ATO notices.
+- Jokes and weighbridge reports are not a shared moderated community feed in this release.
+- Third-party map, NHVR and NMI pages have their own terms and privacy practices.

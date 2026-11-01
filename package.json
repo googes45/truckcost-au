@@ -6,7 +6,8 @@
   "scripts": {
     "test": "node --test tests/calculations.test.mjs",
     "build:web": "node scripts/build-web.mjs",
-    "cap:sync": "npm run build:web && cap sync"
+    "cap:sync": "npm run build:web && cap sync",
+    "check:syntax": "node scripts/check-inline-js.mjs"
   },
   "dependencies": {
     "@capacitor/android": "8.0.0",

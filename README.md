@@ -11,7 +11,7 @@ On Android Chrome, use **Install app** / **Add to Home screen** if offered.
 - Truck records, running costs, fuel fills and measured full-tank fuel intervals.
 - Job estimates, revenue, direct costs and disclosed overhead calculations.
 - Tyre lifecycle records and servicing reminders.
-- Finance/reporting views and CSV export.
+- Internal operating-cost and job-margin calculations; no accountant-ready report export in this beta.
 - JSON workspace backup and restore.
 - GPS trip recorder and manual driver diary with limitations disclosed in-app.
 - National public weighbridge directory plus a separately labelled roadside inspection location starter list.

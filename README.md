@@ -1,50 +1,45 @@
-# TruckCost AU — local beta
+# TruckCost AU — public beta
 
-TruckCost AU is a mobile-first prototype for truck operating costs, job profitability, vehicle records and receipt review.
+TruckCost AU is a mobile-first Australian truck operating-cost and job-record PWA. This release is a **public beta for evaluation**, not production SaaS or an approved compliance product.
 
-## Current release
+## Open the beta
+https://googes45.github.io/truckcost-au/
 
-This branch hardens the original prototype for a controlled **local beta**:
+On Android Chrome, use **Install app** / **Add to Home screen** if offered.
 
-- Local workspace storage is versioned and validated.
-- No fake cloud or authentication claims are shown in the UI.
-- Australian-local dates are used instead of UTC date truncation.
-- Job, fuel, toll, driver and other-cost calculations are kept explicit.
-- Vehicle cost/km includes recorded direct costs plus annual finance, insurance and registration inputs.
-- JSON backup and restore is available from the More screen.
-- PWA caching uses a versioned cache and network-first updates so deployments do not remain stale.
-- Calculation regression tests run in GitHub Actions.
+## Current features
+- Truck records, running costs, fuel fills and measured full-tank fuel intervals.
+- Job estimates, revenue, direct costs and disclosed overhead calculations.
+- Tyre lifecycle records and servicing reminders.
+- Finance/reporting views and CSV export.
+- JSON workspace backup and restore.
+- GPS trip recorder and manual driver diary with limitations disclosed in-app.
+- National public weighbridge directory plus a separately labelled roadside inspection location starter list.
+- Local-only joke board and driver weighbridge status reports.
 
-## Publish a test version with GitHub Pages
+## Important limitations
+- **Local-only storage:** records are kept in the browser profile. No server-side accounts, authentication, cloud database, multi-device sync, central backups, audit trail or business/tenant isolation.
+- **No app-level encryption at rest:** anyone with access to the unlocked device/browser profile may be able to access the workspace. Exported JSON backups are plain files.
+- **Not a compliance system:** the manual diary is not an NHVR-approved Electronic Work Diary and does not calculate legal fatigue limits. GPS may stop when backgrounded or locked.
+- **Not accounting or tax advice:** calculations are estimates based on entered information.
+- **Weighbridge reports:** site information can be incomplete or stale. Driver status reports are local only and not shared. Confirm access and operating status with the operator.
+- **Receipt handling:** details are manually entered; no OCR/accounting integration is connected. Selected images are not uploaded or retained as attachments.
+- **External links:** Google Maps, NHVR and NMI links are third-party services with their own terms and privacy practices.
 
-1. Open **Settings → Pages** in the repository.
-2. Select **Deploy from a branch**, choose `main` (or the branch you are testing), and `/ (root)`.
-3. Save and wait for GitHub Pages to publish.
-4. Open the published HTTPS address.
-5. On Android Chrome, use **Install app** / **Add to Home screen** if offered.
+Read the [Privacy Policy](privacy.html) and [Terms of Use](terms.html).
 
-## Important: this is not production SaaS yet
+## QA
+Automated regression and full inline JavaScript syntax checks run in GitHub Actions:
+https://github.com/googes45/truckcost-au/actions
 
-The browser application still has **no server-side authentication, authorisation, cloud database, multi-device sync, audit logging or subscription billing**. Anyone with access to a browser profile can potentially access its local data. Do not use it as the sole system of record for confidential customer, vehicle or financial information.
+Automated tests do not replace hands-on Android/iOS browser testing, accessibility review, security review or independent calculation validation.
 
-Receipt capture is a manual review workflow; it is not verified OCR or accounting integration.
-
-Before a production launch, the next milestone should add:
-
-1. A real authentication provider and server-side authorisation.
-2. A secure database with tenant/business isolation and backups.
-3. Server-side validation for financial records.
-4. Automated browser/end-to-end tests in addition to calculation tests.
-5. Auditing, roles and data-retention controls.
-6. Verified accounting and OCR integrations.
-7. Monitoring, error reporting and a controlled beta with real-world trucking scenarios.
+## Publication status
+**Public beta candidate — not production-ready SaaS.** A commercial launch with accounts, shared driver content, subscriptions or confidential business records requires a real backend, authentication, authorisation, tenant isolation, server-side validation, backups, monitoring, moderation, privacy/security review and operational support.
 
 ## Development
-
-Requires Node.js 22+ for tests.
-
+Requires Node.js 22+.
 ```bash
 npm test
 ```
-
-The repository contains only test tooling; the application itself remains a static PWA and does not require a build step.
+The app is static and has no application build step.

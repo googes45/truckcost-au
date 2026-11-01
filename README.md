@@ -37,6 +37,10 @@ Automated tests do not replace hands-on Android/iOS browser testing, accessibili
 ## Publication status
 **Private cloud-account beta — not ready for paid public launch.** Email/password accounts and a per-account cloud workspace are now connected. Shared driver content, subscription billing, payment webhooks, fleet/tenant roles, production monitoring, formal backup/restore testing, app-store packaging, privacy/security review and operational support remain before commercial launch.
 
+## First-time authentication configuration
+
+Before testing new account registration, open the [Supabase Auth URL configuration](https://supabase.com/dashboard/project/yxbuafwhfyxyrfvzbzpb/auth/url-configuration). Set the Site URL to `https://googes45.github.io/truckcost-au/` and add `https://googes45.github.io/truckcost-au/**` to the Redirect URLs allow list. Email confirmation must be enabled and the confirmation email template should use the Supabase confirmation URL. This dashboard setting cannot be changed through the connected project tools.
+
 ## Development
 Requires Node.js 22+.
 ```bash

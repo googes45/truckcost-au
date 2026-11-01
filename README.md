@@ -37,6 +37,10 @@ Automated tests do not replace hands-on Android/iOS browser testing, accessibili
 ## Publication status
 **Private cloud-account beta — not ready for paid public launch.** Email/password accounts and a per-account cloud workspace are now connected. Shared driver content, subscription billing, payment webhooks, fleet/tenant roles, production monitoring, formal backup/restore testing, app-store packaging, privacy/security review and operational support remain before commercial launch.
 
+## Lifetime free access for invited users
+
+The owner can grant selected people lifetime complimentary access by email. They receive the normal app link (`https://googes45.github.io/truckcost-au/`), create an account with that exact email address, and their grant is automatically attached when they register. Their account shows **LIFETIME FREE ACCESS**. The owner manages grants and revocations in the private Supabase SQL Editor using the owner-only instructions in `admin/lifetime-access.sql`. Do not share that SQL workflow with invited users. This entitlement is prepared for subscription billing; payment processing is not live yet.
+
 ## First-time authentication configuration
 
 Before testing new account registration, open the [Supabase Auth URL configuration](https://supabase.com/dashboard/project/yxbuafwhfyxyrfvzbzpb/auth/url-configuration). Set the Site URL to `https://googes45.github.io/truckcost-au/` and add `https://googes45.github.io/truckcost-au/**` to the Redirect URLs allow list. Email confirmation must be enabled and the confirmation email template should use the Supabase confirmation URL. This dashboard setting cannot be changed through the connected project tools.

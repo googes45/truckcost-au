@@ -1,7 +1,7 @@
 {
-  "name": "TruckCost AU",
-  "short_name": "TruckCost AU",
-  "description": "Truck operating costs and job profitability",
+  "name": "TruckingCostr AU",
+  "short_name": "TruckingCostr AU",
+  "description": "Australian trucking costs, job profitability and driver tools",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

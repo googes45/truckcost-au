@@ -10,6 +10,7 @@ Status: internal draft only. Do not submit until the native builds, physical-dev
 - Developer contact: jeemswelding2@gmail.com
 - Website: https://googes45.github.io/truckcost-au/
 - Privacy policy: https://googes45.github.io/truckcost-au/privacy.html
+- Account deletion URL (Google Play data deletion form/link): https://googes45.github.io/truckcost-au/delete-account.html
 - Terms: https://googes45.github.io/truckcost-au/terms.html
 - Proposed Android application ID: au.com.truckingcostr.app
 - Proposed iOS bundle ID: au.com.truckingcostr.app

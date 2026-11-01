@@ -48,12 +48,19 @@ The owner can grant selected people lifetime complimentary access by email. They
 
 Before testing new account registration, open the [Supabase Auth URL configuration](https://supabase.com/dashboard/project/yxbuafwhfyxyrfvzbzpb/auth/url-configuration). Set the Site URL to `https://googes45.github.io/truckcost-au/` and add `https://googes45.github.io/truckcost-au/**` to the Redirect URLs allow list. Email confirmation must be enabled and the confirmation email template should use the Supabase confirmation URL. This dashboard setting cannot be changed through the connected project tools.
 
-## Development
+## Development and native packaging
 Requires Node.js 22+.
 ```bash
+npm install
 npm test
+npm run build:web
 ```
-The app is static and has no application build step.
+The Capacitor 8 configuration and repeatable web-asset packaging are now in the repository. GitHub Actions generates Android and iOS native projects and attempts unsigned debug/simulator builds. These are engineering/test builds only: Android debug APKs are not Play Store release bundles, and iOS simulator apps are not signed App Store archives. The generated native projects are not yet store-ready.
+
+- Android build workflow: https://github.com/googes45/truckcost-au/actions/workflows/native-android.yml
+- iOS simulator workflow: https://github.com/googes45/truckcost-au/actions/workflows/native-ios.yml
+
+Before a store submission, the native app still needs deep-link authentication, native GPS permission/background behaviour, native file export/restore testing, purchase integrations, signing, store metadata and a real-device review. Apple may reject a simple website wrapper under App Review Guideline 4.2; native capabilities and a polished app-specific experience must be demonstrated.
 
 ## Subscription backend preparation
 

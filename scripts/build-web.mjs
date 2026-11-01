@@ -10,6 +10,7 @@ const files = [
   'manifest.webmanifest',
   'privacy.html',
   'terms.html',
+  'delete-account.html',
   'icons',
 ];
 

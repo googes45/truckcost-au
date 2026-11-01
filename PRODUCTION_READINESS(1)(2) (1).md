@@ -1,33 +1,43 @@
-# TruckCost AU — production readiness and QA status
+# TruckCost AU — publication readiness
+Updated: 1 November 2026
 
-## User-reported demo QA (2026-10-29)
-- App opens: PASS
-- Navigation: PASS
-- Job calculator screen: PASS (screen flow only; arithmetic still needs verification)
-- Saving/retrieving a job: PASS
-- Notes: none provided
+## Release decision
+**Suitable for a clearly labelled public beta only after current automated checks and hands-on smoke testing pass. Not approved for production SaaS or regulated/compliance use.**
 
-## QA candidate v0.5 corrections prepared locally
-- Cloud status corrected to LOCAL DEMO; account copy now states local-only storage.
-- Dashboard and vehicle cost/km use recorded expenses + maintenance divided by recorded odometer kilometres. Fixed overheads are excluded and disclosed pending a period-based costing model.
-- Estimated job fuel shown separately from recorded expenses to reduce double-counting risk.
-- Job validation added for positive distance and fuel economy, non-negative revenue/costs, and a required job name.
-- Backup restore validates expected top-level arrays before replacing state.
-- Receipt screen explicitly states that OCR is not implemented and requires manual field verification.
+Published PWA: https://googes45.github.io/truckcost-au/
 
-## Validation performed on the local candidate
-- JavaScript syntax check: PASS.
-- Expected sample arithmetic independently checked: fuel $1,272.08; profit $2,762.92; margin 57.56%; profit/km $1.95.
-- Browser/device QA of the corrected build: NOT YET RUN.
-- GitHub Pages deployment of the corrected build: NOT YET VERIFIED.
+## Completed in repository
+- Mobile-first static PWA, manifest, icons and versioned service-worker cache.
+- Local-only status disclosed; no fake cloud account or sync claims.
+- JSON backup/restore, CSV exports and local data reset.
+- Job, fuel, cost, tyre, maintenance, trip, diary, weigh-location and joke workflows.
+- Explicit limitations for fatigue diary, GPS background operation, manual receipt entry and unshared driver reports.
+- Public Privacy Policy and Terms of Use linked in the app.
+- Automated regression tests and full inline JavaScript syntax parsing.
 
-## Next release gates
-1. Upload this candidate to GitHub Pages and run the QA checklist in the package README.
-2. Add full schema/version validation and robust input validation to vehicle, expense, fuel, maintenance, and receipt forms.
-3. Agree a cost-accounting model: reporting period, odometer baseline, fuel actuals vs estimates, overhead allocation, depreciation, and job-to-truck attribution.
-4. Add automated tests for calculation rules, import/export and data migrations.
-5. Configure a real backend and authentication only after the costing/data model is stable; then implement tenant isolation, backups, audit trail, privacy/security review, monitoring and recovery tests.
-6. Add production OCR only with a real provider, explicit consent, data retention rules and human verification of extracted values.
+## Required before announcing public beta
+1. Latest GitHub Actions tests pass.
+2. Latest Pages deployment succeeds and serves the latest commit.
+3. Android Chrome smoke test: launch, demo workspace, add/save records, backup export/restore, navigation, external links, install prompt and service-worker update.
+4. Desktop browser smoke test.
+5. Keyboard focus, labels, contrast, zoom and screen-reader basics.
+6. Confirm deployed privacy/terms match the deployed app.
 
-## Release status
-The app remains a demo. No claim is made that the updated candidate is live on GitHub Pages or that secure accounts, cloud sync, payments, or OCR are implemented.
+## Not delivered — do not advertise as available
+- Real user accounts or secure authentication.
+- Cloud database, shared jokes, shared weighbridge reports or multi-device sync.
+- Subscription billing, paid plans or business/driver roles.
+- Server-side audit trail, tenant isolation or automated backups.
+- OCR, accounting integration or verified receipt extraction.
+- Approved EWD or legal fatigue calculation.
+- Guaranteed complete/current national roadside inspection station directory.
+
+## Production SaaS gates
+Before handling confidential customer/business data at scale: implement a maintained backend and authentication provider; enforce server-side authorisation and tenant isolation; validate input server-side; encrypt transport and sensitive data; implement secrets management, backups and restore drills, retention/deletion controls, audit logs, monitoring, incident response, moderation/abuse handling, security testing and privacy/legal review.
+
+## Operating assumptions
+- Browser local storage is not encrypted by this app and can be lost when browser data is cleared.
+- Users must export and securely retain backups.
+- Job estimates depend on user-entered figures and may not represent actual net profit.
+- Jokes and weighbridge status reports remain on the current device only.
+- Third-party map, NHVR and NMI pages have their own terms and privacy policies.

@@ -55,12 +55,12 @@ npm install
 npm test
 npm run build:web
 ```
-The Capacitor 8 configuration and repeatable web-asset packaging are now in the repository. GitHub Actions generates Android and iOS native projects and attempts unsigned debug/simulator builds. These are engineering/test builds only: Android debug APKs are not Play Store release bundles, and iOS simulator apps are not signed App Store archives. The generated native projects are not yet store-ready.
+The Capacitor 8 configuration, native GPS bridge, native authentication deep-link handling and repeatable web-asset packaging are now in the repository. GitHub Actions generates Android and iOS native projects and attempts unsigned debug/simulator builds. These are engineering/test builds only: Android debug APKs are not Play Store release bundles, and iOS simulator apps are not signed App Store archives. The generated native projects are not yet store-ready.
 
 - Android build workflow: https://github.com/googes45/truckcost-au/actions/workflows/native-android.yml
 - iOS simulator workflow: https://github.com/googes45/truckcost-au/actions/workflows/native-ios.yml
 
-Before a store submission, the native app still needs deep-link authentication, native GPS permission/background behaviour, native file export/restore testing, purchase integrations, signing, store metadata and a real-device review. Apple may reject a simple website wrapper under App Review Guideline 4.2; native capabilities and a polished app-specific experience must be demonstrated.
+Before testing native account creation, add `truckingcostrau://auth/callback` to the Supabase Auth Redirect URLs allow-list as well as the existing GitHub Pages URL. The native app still needs real-device testing of confirmation links, GPS permissions, file export/restore and foreground/background behaviour, purchase integrations, signing, store metadata and a real-device review. Apple may reject a simple website wrapper under App Review Guideline 4.2; native capabilities and a polished app-specific experience must be demonstrated.
 
 ## Subscription backend preparation
 

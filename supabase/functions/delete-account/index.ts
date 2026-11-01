@@ -32,8 +32,20 @@ Deno.serve(async (req: Request) => {
   const { data, error: authError } = await admin.auth.getUser(match[1]);
   if (authError || !data.user) return json({ error: "invalid_session" }, 401);
 
+  // Remove any lifetime-free invitation record linked to this account as
+  // part of the deletion request. No user-supplied ID or email is trusted.
+  const { error: grantError } = await admin
+    .from("lifetime_access_grants")
+    .delete()
+    .eq("user_id", data.user.id);
+  if (grantError) {
+    console.error("Account grant cleanup failed", grantError.message);
+    return json({ error: "account_deletion_failed" }, 500);
+  }
+
   // The account ID is taken only from the verified bearer token. The client
-  // cannot nominate another user for deletion.
+  // cannot nominate another user for deletion. User-owned workspace, jokes,
+  // reports and subscriptions are removed by their database foreign keys.
   const { error: deleteError } = await admin.auth.admin.deleteUser(data.user.id);
   if (deleteError) {
     console.error("Account deletion failed", deleteError.message);

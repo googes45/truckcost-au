@@ -17,7 +17,7 @@ on:
 
 permissions:
   contents: read
- njobs:
+jobs:
   build-android-debug:
     runs-on: ubuntu-latest
     steps:

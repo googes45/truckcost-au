@@ -16,6 +16,8 @@ On Android Chrome, use **Install app** / **Add to Home screen** if offered.
 - GPS trip recorder and manual driver diary with limitations disclosed in-app.
 - National public weighbridge directory plus a separately labelled roadside inspection location starter list.
 - Account-private joke board and driver weighbridge status records (shared public feed is not live yet).
+- Private in-app ATO/BAS due-date reminders (user-entered dates only; no ATO data connection or lodgement in this beta).
+- NHVR official notice channel design documented in-app as strictly one-way publish-only; not activated pending formal NHVR arrangement.
 
 ## Important limitations
 - **Cloud account beta:** email/password authentication and per-account workspace sync use Supabase in Sydney. A browser copy and JSON export are also available. Fleet/tenant sharing and an audit trail are not implemented.
@@ -35,7 +37,7 @@ https://github.com/googes45/truckcost-au/actions
 Automated tests do not replace hands-on Android/iOS browser testing, accessibility review, security review or independent calculation validation.
 
 ## Publication status
-**Private cloud-account beta — not ready for paid public launch.** Email/password accounts and a per-account cloud workspace are now connected. Shared driver content, subscription billing, payment webhooks, fleet/tenant roles, production monitoring, formal backup/restore testing, app-store packaging, privacy/security review and operational support remain before commercial launch.
+**Private cloud-account beta — not ready for paid public launch.** Email/password accounts and a per-account cloud workspace are now connected. Shared driver content, subscription billing, payment webhooks, fleet/tenant roles, ATO SBR registration and approved BAS lodgement integration, NHVR publisher agreement and isolated publisher permissions, production monitoring, formal backup/restore testing, app-store packaging, privacy/security review and operational support remain before commercial launch.
 
 ## Lifetime free access for invited users
 

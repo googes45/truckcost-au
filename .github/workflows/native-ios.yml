@@ -1,0 +1,47 @@
+name: Native iOS simulator build
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - 'cloud-auth.js'
+      - 'capacitor.config.json'
+      - 'package.json'
+      - 'scripts/**'
+      - '.github/workflows/native-ios.yml'
+      - 'icons/**'
+      - 'privacy.html'
+      - 'terms.html'
+
+permissions:
+  contents: read
+
+jobs:
+  build-ios-simulator:
+    runs-on: macos-latest
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install pinned dependencies
+        run: npm install --no-audit --no-fund
+      - name: Prepare web assets
+        run: npm run build:web
+      - name: Generate iOS project
+        run: npx cap add ios
+      - name: Sync native project
+        run: npx cap sync ios
+      - name: Build iOS simulator app (unsigned)
+        run: xcodebuild -workspace ios/App/App.xcworkspace -scheme App -sdk iphonesimulator -configuration Debug -derivedDataPath build CODE_SIGNING_ALLOWED=NO
+      - name: Upload simulator app
+        uses: actions/upload-artifact@v4
+        with:
+          name: truckingcostr-ios-simulator
+          path: build/Build/Products/Debug-iphonesimulator/App.app
+          if-no-files-found: error
+          retention-days: 14

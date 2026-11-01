@@ -30,7 +30,7 @@ create policy "Users can view their own lifetime access"
     revoked_at is null
     and (
       user_id = (select auth.uid())
-      or email = lower((select auth.jwt() ->> 'email'))
+      or email = lower(((select auth.jwt()) ->> 'email'))
     )
   );
 

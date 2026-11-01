@@ -5,7 +5,7 @@ Updated: 1 November 2026
 ## Current state
 
 - The published product is a static Progressive Web App hosted on GitHub Pages.
-- The repository does not currently contain iOS or Android native application projects.
+- A Capacitor 8 native packaging scaffold is now in the repository (`capacitor.config.json`, `scripts/build-web.mjs`, and Android/iOS GitHub Actions build workflows). The workflows generate native projects in CI; generated projects are not committed or yet validated on physical devices.
 - The app displays proposed plan prices, but no customer can purchase a subscription, be charged, or receive paid-plan access.
 - Supabase email/password authentication and per-account workspace sync are present in the beta.
 - Lifetime complimentary grants can be attached to accounts and displayed, but they are **not yet connected to a server-enforced paid-feature access gate**.
@@ -27,13 +27,13 @@ Free Truckie remains available without payment. Do not sell Fleet Boss until fle
 
 ### 1. Native application packaging
 
-Run a short technical spike to wrap the existing web application using Capacitor, then create and maintain:
+The initial Capacitor packaging scaffold has been added. The next step is to run and fix the generated CI builds, then create and maintain:
 - an iOS Xcode project with StoreKit 2 purchase handling;
 - an Android project with the current Google Play Billing Library;
 - separate development, sandbox/test and production configurations;
 - app identifiers, signing, versioning, icons, screenshots and store metadata.
 
-Before committing to this route, prove that GPS trip recording, location permissions, background behaviour, authentication redirects, file backup/restore and service-worker assumptions work correctly inside both native shells. A wrapper alone does not make the current PWA store-ready.
+The current GitHub Actions workflows are intended to produce an Android debug APK and an unsigned iOS simulator app for engineering checks. These outputs are not store-release packages. Before committing to store distribution, prove that GPS trip recording, location permissions, background behaviour, authentication redirects, file backup/restore and service-worker assumptions work correctly inside both native shells. The app currently uses a Supabase confirmation redirect based on `location.origin`; the native callback/deep-link flow is not yet configured. A wrapper alone does not make the current PWA store-ready. Apple guideline 4.2 also requires meaningful app-specific utility beyond a repackaged website.
 
 ### 2. Store purchase flow
 

@@ -274,6 +274,9 @@ test('privacy and terms documents are present and linked from the app', async ()
 
 test('cloud authentication client script parses and uses per-user RLS workspace storage', async () => {
   const cloud = await readFile(new URL('../cloud-auth.js', import.meta.url), 'utf8');
+  const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+  assert.match(html, /supabase-js@2\/dist\/umd\/supabase\.js/);
+  assert.match(html, /cloud-auth\.js/);
   new vm.Script(cloud, { filename: 'cloud-auth.js' });
   assert.match(cloud, /signInWithPassword/);
   assert.match(cloud, /auth\.signUp/);

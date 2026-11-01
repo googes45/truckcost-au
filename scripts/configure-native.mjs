@@ -1,5 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 
+const platform = process.argv[2] || 'both';
+if (platform === 'android' || platform === 'both') {
 const androidPath = new URL('../android/app/src/main/AndroidManifest.xml', import.meta.url);
 let android = await readFile(androidPath, 'utf8');
 const permissions = [
@@ -28,7 +30,8 @@ if (!android.includes('android:scheme="truckingcostrau"')) {
   android = android.slice(0, close) + deepLink + android.slice(close);
 }
 await writeFile(androidPath, android);
-
+}
+if (platform === 'ios' || platform === 'both') {
 const iosPath = new URL('../ios/App/App/Info.plist', import.meta.url);
 let plist = await readFile(iosPath, 'utf8');
 function addRootEntry(key, xml) {
@@ -57,4 +60,5 @@ addRootEntry('CFBundleURLTypes', [
   '    </array>',
 ].join('\n'));
 await writeFile(iosPath, plist);
-console.log('Configured native GPS permissions and truckingcostrau://auth/callback deep links');
+}
+console.log('Configured ' + platform + ' native GPS permissions and truckingcostrau://auth/callback deep links');

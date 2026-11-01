@@ -97,7 +97,7 @@ test('all inline JavaScript in the app parses without syntax errors', async () =
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   const scripts = html.split('<script>').slice(1).map(part => part.split('</script>')[0]);
   assert.ok(scripts.length > 0, 'expected inline app scripts');
-  for (const script of scripts) new vm.Script(script);
+  for (const [i,script] of scripts.entries()) { try { new vm.Script(script,{filename:`index-inline-${i}.js`}); } catch (error) { throw new Error(`Inline script ${i} failed: ${error.stack}`); } }
 });
 
 
@@ -262,8 +262,8 @@ test('privacy and terms documents are present and linked from the app', async ()
   const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
   const privacy=await readFile(new URL('../privacy.html',import.meta.url),'utf8');
   const terms=await readFile(new URL('../terms.html',import.meta.url),'utf8');
-  assert.match(html,/href="privacy\\.html"/);
-  assert.match(html,/href="terms\\.html"/);
+  assert.match(html,/href="privacy\.html"/);
+  assert.match(html,/href="terms\.html"/);
   assert.match(privacy,/local storage/i);
   assert.match(privacy,/GPS|location/i);
   assert.match(privacy,/not shared|not transmitted|not uploaded/i);

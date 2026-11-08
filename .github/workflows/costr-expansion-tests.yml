@@ -8,6 +8,7 @@ on:
       - 'packages/costr-core/**'
       - 'previews/**'
       - 'scripts/check-costr-preview.mjs'
+      - 'scripts/test-costr-preview-browser.mjs'
       - '.github/workflows/costr-expansion-tests.yml'
 jobs:
   verify:
@@ -21,6 +22,12 @@ jobs:
         run: node --test packages/costr-core/index.test.mjs
       - name: Validate preview markup and JavaScript syntax
         run: node scripts/check-costr-preview.mjs
+      - name: Install browser test runner
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Test industry calculators in Chromium
+        run: node scripts/test-costr-preview-browser.mjs
       - name: Package preview for review
         uses: actions/upload-artifact@v4
         with:

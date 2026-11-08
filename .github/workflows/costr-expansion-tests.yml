@@ -7,6 +7,7 @@ on:
     paths:
       - 'packages/costr-core/**'
       - 'previews/**'
+      - 'scripts/check-costr-preview.mjs'
       - '.github/workflows/costr-expansion-tests.yml'
 jobs:
   verify:
@@ -18,6 +19,10 @@ jobs:
           node-version: '22'
       - name: Test shared calculations
         run: node --test packages/costr-core/index.test.mjs
-      - name: Validate preview source
-        run: |
-          node --input-type=module -e "import fs from 'node:fs';import assert from 'node:assert/strict';const s=fs.readFileSync('previews/index.html','utf8');for(const x of ['HeavyCostr AU','RailCostr AU','AeroCostr AU','Calculate estimated margin','No customer data'])assert.ok(s.includes(x),x);"
+      - name: Validate preview markup and JavaScript syntax
+        run: node scripts/check-costr-preview.mjs
+      - name: Package preview for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: costr-industry-previews
+          path: previews/index.html

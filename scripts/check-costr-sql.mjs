@@ -9,7 +9,7 @@ for (const table of ['organisations', 'memberships', 'assets', 'jobs']) {
 for (const policy of ['org_member_select', 'membership_self_select', 'asset_member_select', 'asset_editor_insert', 'asset_editor_update', 'job_member_select', 'job_editor_insert', 'job_editor_update']) {
   assert.ok(sql.includes('create policy ' + policy), 'missing policy: ' + policy);
 }
-assert.ok(sql.includes('foreign key (asset_id, organisation_id)'), 'cross-tenant asset/job foreign key required');
+assert.ok(sql.includes('foreign key (asset_id, organisation_id, industry)'), 'cross-tenant and cross-industry asset/job foreign key required');
 assert.ok(sql.includes("set search_path = ''"), 'security definer search path must be restricted');
 assert.ok(sql.includes('revoke all on function costr.is_member(uuid) from public'), 'function public permissions must be revoked');
 assert.ok(!/grant\s+all\s+on\s+.*\s+to\s+(anon|public)/.test(sql), 'unsafe broad grants');

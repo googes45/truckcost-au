@@ -5,6 +5,8 @@ const PLANS = new Set(['free','diary','owner','fleet','lifetime_free']);
 const STATUSES = new Set(['active','grace_period','cancelled']);
 export function displayFromServerEntitlement(payload, now = Date.now()) {
   const fallback = { plan: 'free', features: [...PLAN_FEATURES.free], lifetimeFree: false };
+  // The deployed Edge Function responds with { entitlement: snapshot }.
+  if (payload && typeof payload === 'object' && !Array.isArray(payload) && 'entitlement' in payload) payload = payload.entitlement;
   if (!payload || typeof payload !== 'object' || Array.isArray(payload) || !PLANS.has(payload.plan)) return fallback;
   if (payload.plan === 'free') return fallback;
   if (payload.plan === 'lifetime_free') {

@@ -1,0 +1,23 @@
+name: COSTR expansion checks
+on:
+  push:
+    branches:
+      - planning/costr-platform-expansion
+  pull_request:
+    paths:
+      - 'packages/costr-core/**'
+      - 'previews/**'
+      - '.github/workflows/costr-expansion-tests.yml'
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test shared calculations
+        run: node --test packages/costr-core/index.test.mjs
+      - name: Validate preview source
+        run: |
+          node --input-type=module -e "import fs from 'node:fs';import assert from 'node:assert/strict';const s=fs.readFileSync('previews/index.html','utf8');for(const x of ['HeavyCostr AU','RailCostr AU','AeroCostr AU','Calculate estimated margin','No customer data'])assert.ok(s.includes(x),x);"

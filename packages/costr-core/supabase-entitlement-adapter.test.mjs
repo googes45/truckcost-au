@@ -6,6 +6,9 @@ test('maps existing Supabase response fields', () => {
   assert.equal(displayFromServerEntitlement({ plan:'owner', subscription_status:'active', period_end:'2026-12-09T00:00:00Z' },now).plan,'owner');
   assert.equal(displayFromServerEntitlement({ plan:'fleet', subscription_status:'cancelled', period_end:'2026-12-09T00:00:00Z' },now).plan,'fleet');
 });
+test('deployed Edge Function response envelope is handled', () => {
+  assert.equal(displayFromServerEntitlement({ entitlement: { plan:'owner', subscription_status:'active', period_end:'2026-12-09T00:00:00Z' } },now).plan,'owner');
+});
 test('lifetime grant and expired subscriptions', () => {
   assert.equal(displayFromServerEntitlement({ plan:'lifetime_free', lifetime_free:true },now).lifetimeFree,true);
   assert.equal(displayFromServerEntitlement({ plan:'lifetime_free', lifetime_free:false },now).plan,'free');

@@ -1,0 +1,28 @@
+name: COSTR expansion checks
+on:
+  push:
+    branches:
+      - planning/costr-platform-expansion
+  pull_request:
+    paths:
+      - 'packages/costr-core/**'
+      - 'previews/**'
+      - 'scripts/check-costr-preview.mjs'
+      - '.github/workflows/costr-expansion-tests.yml'
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test shared calculations
+        run: node --test packages/costr-core/index.test.mjs
+      - name: Validate preview markup and JavaScript syntax
+        run: node scripts/check-costr-preview.mjs
+      - name: Package preview for review
+        uses: actions/upload-artifact@v4
+        with:
+          name: costr-industry-previews
+          path: previews/index.html

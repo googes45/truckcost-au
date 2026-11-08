@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: '22'
       - name: Test shared calculations
-        run: node --test packages/costr-core/index.test.mjs
+        run: node --test packages/costr-core/*.test.mjs
       - name: Validate preview markup and JavaScript syntax
         run: node scripts/check-costr-preview.mjs
       - name: Check proposed database security invariants

@@ -23,7 +23,7 @@ create table if not exists costr.assets (
   industry text not null check (industry in ('trucking','heavy','rail','aviation')),
   label text not null check (length(trim(label)) between 1 and 160),
   created_at timestamptz not null default now(),
-  unique (id, organisation_id)
+  unique (id, organisation_id, industry)
 );
 
 create table if not exists costr.jobs (
@@ -35,7 +35,7 @@ create table if not exists costr.jobs (
   revenue_cents bigint not null default 0 check (revenue_cents >= 0),
   cost_cents bigint not null default 0 check (cost_cents >= 0),
   created_at timestamptz not null default now(),
-  foreign key (asset_id, organisation_id) references costr.assets(id, organisation_id)
+  foreign key (asset_id, organisation_id, industry) references costr.assets(id, organisation_id, industry)
 );
 
 create index if not exists costr_memberships_user_idx on costr.memberships(user_id);

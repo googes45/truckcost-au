@@ -8,6 +8,10 @@
   const login = document.getElementById('login');
   const app = document.getElementById('app');
   const originalSave = window.save;
+  // Recovery links can establish a session before the PASSWORD_RECOVERY event is delivered.
+  // Keep the password form visible until the user chooses a new password.
+  const recoveryLink = /(?:[?#&])type=recovery(?:[&#]|$)/.test(location.href);
+  if (recoveryLink) recoveringPassword = true;
   function message(text) { const el = document.getElementById('cloudAuthMessage'); if (el) el.textContent = text; }
   function status(text) { const el = document.getElementById('cloudStatus'); if (el) el.textContent = text; }
   function showLogin() { if (app) app.classList.add('hidden'); if (login) { login.classList.remove('hidden'); login.innerHTML = '<div class="loginbox"><div class="logo">TruckingCostr <span>AU</span></div><div class="eyebrow">Know what your truck really costs.</div><h2>Driver account</h2><p class="muted">If you have been invited to lifetime free access, create your account using the exact email address the owner invited. Your access will be recognised automatically.</p><div class="field"><label>Email address</label><input id="cloudEmail" type="email" autocomplete="email" placeholder="you@example.com"></div><div class="field"><label>Password</label><input id="cloudPassword" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters"></div><button id="cloudSignIn" class="btn" style="width:100%">Sign in</button><button id="cloudSignUp" class="btn secondary" style="width:100%;margin-top:8px">Create account</button><button id="cloudReset" class="btn secondary" style="width:100%;margin-top:8px">Forgot password?</button><button id="cloudResume" class="btn" style="width:100%;margin-top:8px;display:none">Resume saved workspace</button><button id="cloudDemo" class="btn secondary" style="width:100%;margin-top:8px">Start fresh demo workspace</button><p id="cloudAuthMessage" class="small muted" role="status" aria-live="polite"></p><p class="small"><a href="privacy.html">Privacy policy</a> · <a href="terms.html">Terms of use</a> · <a href="https://github.com/googes45/truckcost-au/issues" target="_blank" rel="noopener">Report a problem</a></p></div>'; document.getElementById('cloudSignIn').onclick = () => auth('signin'); document.getElementById('cloudSignUp').onclick = () => auth('signup'); document.getElementById('cloudReset').onclick = () => auth('reset'); const resume = document.getElementById('cloudResume'); const saved = state && state.user && ['demo@truckingcostr.au','Local operator'].includes(state.user.email); if (saved) { resume.style.display = 'block'; resume.onclick = () => window.showApp(); } document.getElementById('cloudDemo').onclick = () => { if (saved && !confirm('Start a fresh demo? This replaces the saved browser workspace, including your test jobs. Export a backup first if you need them.')) return; if (typeof window.createDemo === 'function') window.createDemo(); }; } }
@@ -47,6 +51,7 @@
         const { error } = await client.auth.updateUser({ password: nextPassword });
         if (error) throw error;
         recoveringPassword = false;
+        if (recoveryLink) history.replaceState(null, '', location.pathname);
         const { data, error: sessionError } = await client.auth.getSession();
         if (sessionError) throw sessionError;
         if (data.session) await loadWorkspace(data.session);
@@ -82,7 +87,8 @@
   client.auth.onAuthStateChange((event) => {
     if (event === 'SIGNED_OUT') { session = null; lifetimeFree = false; state = emptyState(); originalSave(); showLogin(); }
     if (event === 'PASSWORD_RECOVERY') { recoveringPassword = true; showPasswordRecovery(); }
+    if (event === 'SIGNED_IN' && recoveringPassword) showPasswordRecovery();
   });
-  showLogin();
+  if (recoveringPassword) showPasswordRecovery(); else showLogin();
   client.auth.getSession().then(({ data, error }) => { if (error) return message(error.message); if (recoveringPassword) return showPasswordRecovery(); if (data.session) loadWorkspace(data.session); });
 })();

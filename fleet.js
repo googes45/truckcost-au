@@ -1,0 +1,24 @@
+'use strict';
+(() => {
+ const client=window.supabase.createClient('https://yxbuafwhfyxyrfvzbzpb.supabase.co','sb_publishable_7Bf7EPeN_AsCz1ZQbPcc3w_WeHDUDgK',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'sb-yxbuafwhfyxyrfvzbzpb-auth-token'}});
+ const escape=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const el=()=>document.getElementById('content');
+ let current=null;
+ const msg=s=>{const e=document.getElementById('fleetMessage');if(e)e.textContent=s};
+ async function user(){const {data,error}=await client.auth.getUser();if(error||!data.user)throw Error('Sign in to your cloud account first.');return data.user}
+ window.fleetPage=async()=>{
+  go('more');const c=el();c.innerHTML='<div class="hero"><div class="eyebrow">Fleet accounts · beta</div><h1>Fleet HQ</h1><p class="muted">Company and truck register. Your personal jobs remain private; fleet-wide jobs, invitations and billing are not yet enabled.</p></div><div id="fleetMessage" class="small muted">Loading fleets…</div><div id="fleetBody"></div><div class="actions"><button class="btn secondary" onclick="go(\'more\')">Back to More</button></div>';
+  try{const u=await user();current=u.id;const {data,error}=await client.from('fleets').select('id,name,owner_id').order('created_at',{ascending:false});if(error)throw error;
+  const owned=data.filter(f=>f.owner_id===u.id);
+  document.getElementById('fleetBody').innerHTML='<div class="card"><b>Create your fleet</b><p class="small muted">Use your registered company or trading name. Fleet names are not verified.</p><div class="field"><label>Fleet name</label><input id="newFleetName" maxlength="120" placeholder="Your transport business"></div><button class="btn" onclick="fleetCreate()">＋ Create fleet</button></div>'+(data.length?data.map(f=>'<div class="card"><b>'+escape(f.name)+'</b><p class="small muted">'+(f.owner_id===u.id?'Owner':'Member')+'</p><button class="btn secondary" onclick="fleetOpen(\''+f.id+'\')">View trucks</button></div>').join(''):'<p class="muted">No fleet accounts yet.</p>')+'<p class="small muted">Beta: this register does not change your existing personal jobs or automatically include trucks from My Trucks.</p>';
+  msg(owned.length+' fleet account(s) owned by you.');
+  }catch(e){msg(e.message)}
+ };
+ window.fleetCreate=async()=>{try{const u=await user();const name=document.getElementById('newFleetName')?.value.trim();if(!name||name.length<2)throw Error('Enter a fleet name of at least 2 characters.');const {error}=await client.from('fleets').insert({owner_id:u.id,name});if(error)throw error;await fleetPage()}catch(e){msg(e.message)}};
+ window.fleetOpen=async id=>{try{const u=await user();const {data:f,error:fe}=await client.from('fleets').select('id,name,owner_id').eq('id',id).single();if(fe)throw fe;const {data:v,error:ve}=await client.from('fleet_vehicles').select('id,registration,label').eq('fleet_id',id).order('created_at',{ascending:false});if(ve)throw ve;
+ const canEdit=f.owner_id===u.id;
+ document.getElementById('fleetBody').innerHTML='<div class="card"><b>'+escape(f.name)+'</b><p class="small muted">Fleet truck register</p>'+(canEdit?'<div class="field"><label>Registration</label><input id="fleetRego" maxlength="30" placeholder="Truck rego"></div><div class="field"><label>Truck description</label><input id="fleetLabel" maxlength="120" placeholder="Optional description"></div><button class="btn" onclick="fleetAddVehicle(\''+id+'\')">＋ Register truck</button>':'')+'</div>'+(v.length?v.map(x=>'<div class="card"><b>'+escape(x.registration)+'</b><p class="small muted">'+escape(x.label)+'</p></div>').join(''):'<p class="muted">No trucks registered to this fleet yet.</p>')+'<button class="btn secondary" onclick="fleetPage()">All fleets</button>';
+ msg(v.length+' fleet truck(s) registered.');
+ }catch(e){msg(e.message)}};
+ window.fleetAddVehicle=async id=>{try{const registration=document.getElementById('fleetRego')?.value.trim().toUpperCase();const label=document.getElementById('fleetLabel')?.value.trim()||'';if(!registration)throw Error('Enter the truck registration.');const {error}=await client.from('fleet_vehicles').insert({fleet_id:id,registration,label});if(error)throw error;await fleetOpen(id)}catch(e){msg(e.message)}};
+})();

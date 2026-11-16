@@ -10,7 +10,7 @@
  document.head.appendChild(css);
  let entitled=false, saved='blue', activeUser=null;
  const note=t=>{const n=document.getElementById('themeNotice');if(n)n.textContent=t;};
- function paint(theme){api.preview(theme);document.body.classList.toggle('theme-preview',theme!=='blue');}
+ function paint(theme){api.preview(theme);document.body.classList.add('theme-preview');}
  async function load(){
   if(!client)return;
   const {data:{user},error}=await client.auth.getUser();

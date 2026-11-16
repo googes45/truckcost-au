@@ -11,7 +11,7 @@ function loadThemes(){
 }
 test('three distinct palettes are defined',()=>{
  const api=loadThemes();
- assert.deepEqual(Object.keys(api.themes).sort(),['blue','gold','red']);
+ assert.deepEqual(Array.from(Object.keys(api.themes)).sort(),['blue','gold','red']);
  assert.notEqual(api.themes.blue.accent,api.themes.red.accent);
 });
 test('premium theme is denied unless entitlement is explicitly true',()=>{

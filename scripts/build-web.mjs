@@ -6,6 +6,10 @@ const webDir = resolve(root, 'www');
 const files = [
   'index.html',
   'cloud-auth.js',
+  'customer-themes.js',
+  'theme-settings.js',
+  'billing-settings.js',
+  'fleet.js',
   'sw.js',
   'manifest.webmanifest',
   'privacy.html',

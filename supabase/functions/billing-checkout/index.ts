@@ -4,7 +4,7 @@ import Stripe from "npm:stripe@17.7.0";
 import { createClient } from "npm:@supabase/supabase-js@2.49.4";
 
 const origin = "https://googes45.github.io";
-const allowed = ["https://googes45.github.io"];
+
 const headers = {"Access-Control-Allow-Origin":origin,"Access-Control-Allow-Headers":"authorization,apikey,content-type,x-client-info","Access-Control-Allow-Methods":"POST,OPTIONS","Content-Type":"application/json","Cache-Control":"no-store"};
 function respond(status:number, body:object){return new Response(JSON.stringify(body),{status,headers});}
 Deno.serve(async(req:Request)=>{
@@ -25,6 +25,8 @@ Deno.serve(async(req:Request)=>{
   if(dbError)throw dbError;
   if(existing&&["active","trialing"].includes(existing.status))return respond(409,{error:"already_subscribed",message:"Manage your existing subscription instead."});
   const stripe=new Stripe(key,{apiVersion:"2024-12-18.acacia"});
+  const configuredPrice=await stripe.prices.retrieve(price);
+  if(!configuredPrice.active||configuredPrice.currency!=="aud"||configuredPrice.unit_amount!==500||configuredPrice.tax_behavior!=="inclusive"||configuredPrice.recurring?.interval!=="month")return respond(503,{error:"price_configuration_mismatch"});
   const params:Stripe.Checkout.SessionCreateParams={
    mode:"subscription",line_items:[{price,quantity:1}],client_reference_id:user.id,
    customer_email:existing?.stripe_customer_id?undefined:user.email,
@@ -35,7 +37,7 @@ Deno.serve(async(req:Request)=>{
    metadata:{supabase_user_id:user.id}
   };
   const session=await stripe.checkout.sessions.create(params,{idempotencyKey:"checkout-"+user.id+"-"+crypto.randomUUID()});
-  if(!session.url||!allowed.some(o=>session.url?.startsWith("https://checkout.stripe.com/")))return respond(502,{error:"checkout_unavailable"});
+  if(!session.url||!/^https:\/\/checkout\.stripe\.com\//.test(session.url))return respond(502,{error:"checkout_unavailable"});
   return respond(200,{url:session.url});
  }catch(e){console.error("Checkout failed",e instanceof Error?e.message:"unknown");return respond(500,{error:"checkout_failed"});}
 });

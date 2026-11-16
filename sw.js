@@ -1,5 +1,5 @@
-const CACHE_NAME = 'truckingcostr-au-shell-v16';
-const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './privacy.html', './terms.html', './delete-account.html', './icons/icon-192.png', './icons/icon-512.png'];
+const CACHE_NAME = 'truckingcostr-au-shell-v17';
+const APP_SHELL = ['./', './index.html', './cloud-auth.js', './fleet.js', './customer-themes.js', './theme-settings.js', './billing-settings.js', './manifest.webmanifest', './privacy.html', './terms.html', './delete-account.html', './icons/icon-192.png', './icons/icon-512.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)));
   self.skipWaiting();
@@ -18,5 +18,5 @@ self.addEventListener('fetch', event => {
       caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
     }
     return response;
-  }).catch(() => caches.match(event.request).then(cached => cached || caches.match('./index.html'))));
+  }).catch(() => caches.match(event.request).then(cached => cached || (event.request.mode === 'navigate' ? caches.match('./index.html') : Response.error()))));
 });

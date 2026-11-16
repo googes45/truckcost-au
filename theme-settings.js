@@ -21,7 +21,7 @@
    client.from('customer_theme_preferences').select('theme').eq('user_id',user.id).maybeSingle()
   ]);
   if(billingError||prefError){entitled=false;paint('blue');note('Could not verify subscription. Premium themes remain locked.');return;}
-  entitled=!!billing&&['active','trialing'].includes(billing.status)&&(!billing.current_period_end||Date.parse(billing.current_period_end)>Date.now());
+  entitled=!!billing&&['active','trialing'].includes(billing.status)&&(!!billing.current_period_end&&Date.parse(billing.current_period_end)>Date.now());
   saved=pref?.theme||'blue';paint(api.effectiveTheme(saved,entitled));
   const select=document.getElementById('themeChoice');if(select)select.value=api.effectiveTheme(saved,entitled);
   note(entitled?'Subscription verified. Select a theme and save it.':'A verified active subscription is required to save a premium theme.');

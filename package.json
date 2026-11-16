@@ -4,7 +4,7 @@
   "version": "1.0.0-beta.2",
   "type": "module",
   "scripts": {
-    "test": "node --test tests/calculations.test.mjs",
+    "test": "node --test tests/*.test.mjs",
     "build:web": "node scripts/build-web.mjs && esbuild scripts/native-bridge.js --bundle --format=iife --outfile=www/native-bridge.js && node scripts/inject-native-script.mjs",
     "cap:sync": "npm run build:web && cap sync",
     "check:syntax": "node scripts/check-inline-js.mjs"

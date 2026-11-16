@@ -48,6 +48,8 @@ Deno.serve(async(req:Request)=>{
   if(other?.stripe_subscription_id&&other.stripe_subscription_id!==subscription.id)throw Error("multiple_subscriptions_manual_review");
   const priceId=subscription.items.data[0]?.price.id||null;
   const periodEnd=subscription.items.data[0]?.current_period_end||null;
+  // Fail closed: never grant an active entitlement without a verified paid-through date.
+  if(["active","trialing"].includes(subscription.status)&&!periodEnd)throw Error("subscription_period_missing");
   const {error:upsertError}=await db.from("billing_subscriptions").upsert({
    user_id:userId,stripe_customer_id:customerId,stripe_subscription_id:subscription.id,
    stripe_price_id:priceId,status:subscription.status,

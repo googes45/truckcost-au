@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { liveMode, stripe } from "../_shared/stripe-billing.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -31,6 +32,26 @@ Deno.serve(async (req: Request) => {
 
   const { data, error: authError } = await admin.auth.getUser(match[1]);
   if (authError || !data.user) return json({ error: "invalid_session" }, 401);
+
+  // Confirm that a linked Stripe subscription cannot keep renewing after deletion.
+  const { data: customer, error: billingError } = await admin.rpc("get_stripe_billing_customer", {
+    p_user_id: data.user.id,
+    p_environment: "production",
+  });
+  if (billingError) return json({ error: "billing_check_unavailable" }, 503);
+  if (customer) {
+    if (!stripe || !liveMode) return json({ error: "billing_check_unavailable" }, 503);
+    try {
+      for await (const subscription of stripe.subscriptions.list({ customer, status: "all" })) {
+        if (!["canceled", "incomplete_expired"].includes(subscription.status) &&
+            !subscription.cancel_at_period_end && !subscription.cancel_at) {
+          return json({ error: "cancel_subscription_before_deletion" }, 409);
+        }
+      }
+    } catch {
+      return json({ error: "billing_check_unavailable" }, 503);
+    }
+  }
 
   // Remove any lifetime-free invitation record linked to this account as
   // part of the deletion request. No user-supplied ID or email is trusted.

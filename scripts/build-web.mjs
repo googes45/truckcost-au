@@ -6,6 +6,7 @@ const webDir = resolve(root, 'www');
 const files = [
   'index.html',
   'cloud-auth.js',
+  'fleet.js',
   'sw.js',
   'manifest.webmanifest',
   'privacy.html',

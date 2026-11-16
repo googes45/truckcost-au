@@ -63,7 +63,78 @@
   }
   function hasLocalData() { return ['vehicles','jobs','expenses','maintenance','tyres','trips','diaryEntries','weighReports','jokes','atoReminders'].some(k => Array.isArray(state[k]) && state[k].length); }
   async function sync() { if (!session) return; if (syncing) { pending = true; return; } syncing = true; try { const payload = Object.assign({}, state, { user: { email: session.user.email || '', id: session.user.id } }); const { error } = await client.from('user_workspaces').upsert({ user_id: session.user.id, workspace: payload, updated_at: new Date().toISOString() }, { onConflict: 'user_id' }); if (error) throw error; status(lifetimeFree ? '★ LIFETIME FREE ACCESS' : '● CLOUD SYNCED'); } catch (e) { status('● SYNC ISSUE'); console.error('TruckingCostr cloud sync failed', e); } finally { syncing = false; if (pending) { pending = false; sync(); } } }
-  async function loadWorkspace(nextSession) { session = nextSession; status('● LOADING CLOUD'); try { const { data, error } = await client.from('user_workspaces').select('workspace').eq('user_id', session.user.id).maybeSingle(); if (error) throw error; if (data && data.workspace && Object.keys(data.workspace).length) { state = normalise(data.workspace); state.user = { email: session.user.email || '', id: session.user.id }; originalSave(); } else { if (hasLocalData() && confirm('This account has no cloud data yet. Upload the records currently saved on this device? Choose Cancel to start with an empty cloud workspace.')) { state.user = { email: session.user.email || '', id: session.user.id }; } else { state = emptyState(); state.user = { email: session.user.email || '', id: session.user.id }; } await sync(); } const { data: grant, error: grantError } = await client.from('lifetime_access_grants').select('grant_type,reason,granted_at').eq('user_id', session.user.id).maybeSingle(); if (grantError) throw grantError; lifetimeFree = !!grant && grant.grant_type === 'lifetime_free'; window.showApp(); status(lifetimeFree ? '★ LIFETIME FREE ACCESS' : '● CLOUD SYNCED'); } catch (e) { session = null; status('● CLOUD ERROR'); showLogin(); message('Could not load your cloud workspace: ' + (e.message || 'Try again.')); } }
+  async function loadWorkspace(nextSession) { session = nextSession; status('● LOADING CLOUD'); try { const { data, error } = await client.from('user_workspaces').select('workspace').eq('user_id', session.user.id).maybeSingle(); if (error) throw error; if (data && data.workspace && Object.keys(data.workspace).length) { state = normalise(data.workspace); state.user = { email: session.user.email || '', id: session.user.id }; originalSave(); } else { if (hasLocalData() && confirm('This account has no cloud data yet. Upload the records currently saved on this device? Choose Cancel to start with an empty cloud workspace.')) { state.user = { email: session.user.email || '', id: session.user.id }; } else { state = emptyState(); state.user = { email: session.user.email || '', id: session.user.id }; } await sync(); } const { data: grant, error: grantError } = await client.from('lifetime_access_grants').select('grant_type,reason,granted_at').eq('user_id', session.user.id).maybeSingle(); if (grantError) throw grantError; lifetimeFree = !!grant && grant.grant_type === 'lifetime_free'; window.showApp(); void updateWebBillingAfterLogin(); status(lifetimeFree ? '★ LIFETIME FREE ACCESS' : '● CLOUD SYNCED'); } catch (e) { session = null; status('● CLOUD ERROR'); showLogin(); message('Could not load your cloud workspace: ' + (e.message || 'Try again.')); } }
+  let webBilling = null;
+  const webBillingReturn = new URLSearchParams(location.search).get('billing');
+  function drawWebBilling() {
+    const card = document.getElementById('webBilling');
+    if (!card || !session || window.TruckingCostrNative?.isNative || !webBilling) return;
+    const { enabled, entitlement, hasStripeCustomer } = webBilling;
+    if (!enabled) return;
+    const hasDiary = entitlement?.entitlements?.includes('diary');
+    card.innerHTML = '<div class="section-title">Subscription</div><div class="card">' +
+      '<b>Diary Truckie</b><p class="muted">Manual work and rest diary. A$5.50 per month including Australian GST.</p>' +
+      (hasDiary ? '<p>Your account already includes diary access.</p>' :
+        '<button id="webSubscribe" class="btn">Subscribe to Diary Truckie</button>') +
+      (hasStripeCustomer ? '<button id="webManage" class="btn secondary">Manage subscription</button>' : '') +
+      '<p id="webBillingMessage" class="small muted" role="status"></p></div>';
+    const subscribe = document.getElementById('webSubscribe');
+    const manage = document.getElementById('webManage');
+    if (subscribe) subscribe.onclick = () => startWebBilling('subscribe', subscribe);
+    if (manage) manage.onclick = () => startWebBilling('manage', manage);
+  }
+  async function refreshWebBilling() {
+    if (!session || window.TruckingCostrNative?.isNative) return;
+    const userId = session.user.id;
+    const { data, error } = await client.functions.invoke('stripe-checkout', { method: 'GET' });
+    if (error || session?.user.id !== userId) return;
+    webBilling = data;
+    drawWebBilling();
+    return data;
+  }
+  async function startWebBilling(action, button) {
+    const message = document.getElementById('webBillingMessage');
+    button.disabled = true;
+    if (message) message.textContent = 'Opening Stripe…';
+    try {
+      const { data, error } = await client.functions.invoke('stripe-checkout', { body: { action } });
+      if (error || !data?.url) throw error || new Error('missing_checkout_url');
+      const destination = new window.URL(data.url);
+      if (!['https://checkout.stripe.com', 'https://billing.stripe.com'].includes(destination.origin)) {
+        throw new Error('unexpected_checkout_url');
+      }
+      location.assign(destination.href);
+    } catch (error) {
+      const code = await error?.context?.json?.().then(data => data.error).catch(() => null);
+      if (message) message.textContent = code === 'manage_existing_subscription'
+        ? 'Your existing subscription needs attention. Open Stripe billing to update it.'
+        : 'Stripe is unavailable. Try again shortly.';
+      if (code === 'manage_existing_subscription') {
+        button.textContent = 'Manage subscription';
+        button.onclick = () => startWebBilling('manage', button);
+      }
+      button.disabled = false;
+    }
+  }
+  window.addEventListener('focus', () => { void refreshWebBilling(); });
+  window.drawWebBilling = drawWebBilling;
+  window.requireDiaryAccess = function () {
+    if (!session || !webBilling?.enabled || webBilling.entitlement?.entitlements?.includes('diary')) return true;
+    toast('Diary Truckie is available under More Stuff.');
+    return false;
+  };
+  async function updateWebBillingAfterLogin() {
+    const billing = await refreshWebBilling();
+    if (webBillingReturn !== 'success' || !billing?.enabled) return;
+    history.replaceState(null, '', location.pathname);
+    if (billing.entitlement?.entitlements?.includes('diary')) return toast('Diary Truckie is active.');
+    toast('Stripe is confirming your subscription.');
+    for (let attempt = 0; attempt < 7 && session; attempt++) {
+      await new Promise(resolve => setTimeout(resolve, 2500));
+      const next = await refreshWebBilling();
+      if (next?.entitlement?.entitlements?.includes('diary')) return toast('Diary Truckie is active.');
+    }
+  }
   window.save = function () { originalSave(); if (session) { clearTimeout(timer); timer = setTimeout(sync, 900); } };
   window.signOut = async function () { const { error } = await client.auth.signOut(); if (error) message(error.message); };
   window.deleteAccount = async function () {
@@ -81,11 +152,16 @@
       showLogin();
       message('Your account and cloud workspace have been deleted.');
     } catch (e) {
-      message(e.message || 'Account deletion failed. Please try again or contact support.');
+      const details = await e?.context?.json?.().catch(() => null);
+      if (details?.error === 'cancel_subscription_before_deletion') {
+        toast('Cancel your Stripe renewal under More Stuff before deleting your account.');
+        return;
+      }
+      toast('Account deletion failed. Please try again or contact support.');
     }
   };
   client.auth.onAuthStateChange((event) => {
-    if (event === 'SIGNED_OUT') { session = null; lifetimeFree = false; state = emptyState(); originalSave(); showLogin(); }
+    if (event === 'SIGNED_OUT') { session = null; lifetimeFree = false; webBilling = null; state = emptyState(); originalSave(); showLogin(); }
     if (event === 'PASSWORD_RECOVERY') { recoveringPassword = true; showPasswordRecovery(); }
     if (event === 'SIGNED_IN' && recoveringPassword) showPasswordRecovery();
   });

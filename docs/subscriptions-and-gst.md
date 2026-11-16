@@ -1,6 +1,10 @@
 # TruckingCostr AU — subscriptions and GST launch setup
 
-Status: payment preparation only. No payment processor or Apple/Google purchase verification is connected and no customer can currently subscribe or be charged. A private server-side subscription schema and authenticated entitlement-read endpoint have now been deployed; these are infrastructure components, not a working checkout.
+### Web launch status
+
+Stripe Tax and the Australian GST registration are active in live mode. The live Diary Truckie web price is A$5.00 per month excluding GST (A$5.50 where Australian GST applies). Stripe Checkout calculates GST automatically. The table below records the earlier proposed storefront prices.
+
+Web checkout stays disabled until the live Stripe restricted key and endpoint signing secret are installed in Supabase Edge Function Secrets as `STRIPE_SECRET_KEY` and `STRIPE_WEBHOOK_SECRET`. The default Diary Truckie price ID is set in `supabase/functions/_shared/stripe-billing.ts`. The Stripe webhook endpoint receives checkout, subscription and invoice lifecycle events. Verify the webhook and customer portal before setting `STRIPE_CHECKOUT_ENABLED=true`. Never put secret values into the repository.
 
 ## Business tax position supplied by owner
 
@@ -32,7 +36,7 @@ These are illustrative tax components before platform commissions, payment fees,
 
 1. **Apple:** create auto-renewable subscription products in App Store Connect, sign the Paid Apps Agreement, submit Australian ABN and proof of GST registration, enter tax forms and bank details. Apple states Australian developers need GST registration evidence to sell apps. Apple proceeds are customer price less applicable taxes and commission.
 2. **Google Play:** create subscription products in Play Console and integrate Google Play Billing for digital features. As an Australian developer, enter the ABN in the Play Console payments profile and configure Australian tax information. Google says Australian developers are responsible for determining, charging and remitting GST on Australian Play paid-app and in-app purchases.
-3. **Web checkout (if offered):** use a separate Stripe Billing integration with GST-inclusive prices, the correct Australian tax rate, ABN tax ID and compliant tax invoices. Do not use Stripe checkout to bypass Apple/Google billing requirements for digital subscriptions in their stores.
+3. **Web checkout (if offered):** use Stripe Billing with the GST-exclusive web price and automatic tax enabled at checkout. Do not use Stripe checkout to bypass Apple/Google billing requirements for digital subscriptions in their stores.
 4. **Server-side entitlement service:** verify Apple/Google purchase tokens or receipts on a trusted server; verify Stripe webhook signatures; store the canonical active entitlement server-side; handle renewals, expiry, cancellation, grace periods, refunds, chargebacks, restore purchases and account changes.
 5. **Access enforcement:** free, diary, owner and fleet capabilities must be checked against server-verified entitlements. Never trust a client-supplied plan name or a local-storage flag. Lifetime complimentary grants must be checked server-side and bypass recurring billing only when active.
 6. **Customer and finance operations:** provide clear renewal/cancellation terms, restore purchases, support contact, privacy disclosures, subscription management links, refund handling, GST/tax invoice process and a reconciliation process for each sales channel.

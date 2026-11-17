@@ -51,18 +51,12 @@ test('the app does not present accountant-ready reports or claim ATO lodgement',
 });
 
 
-test('GPS trip recorder and manual work diary are present with clear beta limitations', async () => {
+test('GPS trip recorder remains available and legacy diary data stays readable', async () => {
   const html = await readFile(new URL('../index.html', import.meta.url), 'utf8');
   assert.match(html, /function startTrip\(\)/);
   assert.match(html, /function resumeTrip\(\)/);
   assert.match(html, /function stopTrip\(\)/);
   assert.match(html, /function haversineKm\(a,b\)/);
-  assert.match(html, /function diaryModal\(\)/);
-  assert.match(html, /function saveDiaryEntry\(\)/);
-  assert.match(html, /function exportDiaryCsv\(\)/);
-  assert.match(html, /not an NHVR-approved Electronic Work Diary/);
-  assert.ok(html.includes('record-keeping-requirements'));
-  assert.ok(html.includes('electronic-work-diary-ewd/ewd-register'));
   assert.match(html, /navigator\.geolocation\.watchPosition/);
   assert.match(html, /trips:Array\.isArray\(s\.trips\)/);
   assert.match(html, /diaryEntries:Array\.isArray\(s\.diaryEntries\)/);
@@ -266,7 +260,7 @@ test('privacy and terms documents are present and linked from the app', async ()
   assert.match(privacy,/browser/i);
   assert.match(privacy,/GPS|location/i);
   assert.match(privacy,/shared public driver feed is not yet connected/i);
-  assert.match(terms,/not an NHVR-approved/i);
+  assert.match(terms,/GPS distance and speed are not certified measurements/i);
   assert.match(terms,/beta/i);
 });
 
@@ -300,10 +294,10 @@ test('ATO and BAS due-date reminders are private workspace data with no false lo
   assert.ok(auth.includes('atoReminders'));
 });
 
-test('NHVR publisher commitment is one-way and excludes all driver and fleet information', async () => {
-  const html=await readFile(new URL('../index.html',import.meta.url),'utf8');
-  assert.match(html,/strictly one-way/);
-  assert.match(html,/no access to driver or fleet accounts/);
-  assert.match(html,/No return-data feed/);
-  assert.match(html,/not connected or endorsed by NHVR yet/);
+test('retired diary and publisher controls are absent from the app and landing page', async () => {
+  const [app, landing, auth] = await Promise.all(['index.html', 'landing.html', 'cloud-auth.js']
+    .map(file => readFile(new URL('../' + file, import.meta.url), 'utf8')));
+  assert.doesNotMatch(app + landing + auth, /Diary Truckie|Add diary entry|NHVR official updates|NHVR publishing/i);
+  assert.match(app, /National weigh location finder/);
+  assert.match(app, /function renderWeighList\(\)/);
 });

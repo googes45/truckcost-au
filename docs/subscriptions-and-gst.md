@@ -1,6 +1,7 @@
 # TruckingCostr AU — subscriptions and GST launch setup
 
 ### Web launch status
+**Retired:** Diary Truckie checkout and the work diary were removed from the apps. The Stripe configuration below documents the prior implementation.
 
 Stripe Tax and the Australian GST registration are active in live mode. The live Diary Truckie web price is A$5.00 per month excluding GST (A$5.50 where Australian GST applies). Stripe Checkout calculates GST automatically. The table below records the earlier proposed storefront prices.
 
